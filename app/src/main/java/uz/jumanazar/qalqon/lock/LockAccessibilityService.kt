@@ -2,7 +2,9 @@ package uz.jumanazar.qalqon.lock
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
+import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
+import uz.jumanazar.qalqon.MainActivity
 import uz.jumanazar.qalqon.PinStore
 
 /**
@@ -61,5 +63,37 @@ class LockAccessibilityService : AccessibilityService() {
         startActivity(intent)
     }
 
+    // --- Secret reopen combo: Volume Up pressed 5x within 3 seconds ---
+    private val volumeUpTimes = ArrayDeque<Long>()
+
+    override fun onKeyEvent(event: KeyEvent?): Boolean {
+        if (event != null &&
+            event.action == KeyEvent.ACTION_DOWN &&
+            event.keyCode == KeyEvent.KEYCODE_VOLUME_UP
+        ) {
+            val now = System.currentTimeMillis()
+            volumeUpTimes.addLast(now)
+            while (volumeUpTimes.isNotEmpty() && now - volumeUpTimes.first() > WINDOW_MS) {
+                volumeUpTimes.removeFirst()
+            }
+            if (volumeUpTimes.size >= REQUIRED_PRESSES) {
+                volumeUpTimes.clear()
+                openDashboard()
+            }
+        }
+        return super.onKeyEvent(event) // never consume; volume keeps working
+    }
+
+    private fun openDashboard() {
+        val intent = Intent(this, MainActivity::class.java)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+    }
+
     override fun onInterrupt() { /* no-op */ }
+
+    private companion object {
+        const val REQUIRED_PRESSES = 5
+        const val WINDOW_MS = 3000L
+    }
 }

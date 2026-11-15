@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
     private val accessibilityOn = mutableStateOf(false)
     private val adminOn = mutableStateOf(false)
     private val dnsOn = mutableStateOf(false)
-    private val disguisedOn = mutableStateOf(false)
+    private val iconMode = mutableStateOf(AppDisguise.Mode.NORMAL)
     private lateinit var dpm: DevicePolicyManager
     private lateinit var dnsPrefs: DnsPrefs
 
@@ -73,15 +73,15 @@ class MainActivity : ComponentActivity() {
                             accessibilityOn = accessibilityOn.value,
                             adminOn = adminOn.value,
                             dnsOn = dnsOn.value,
-                            disguisedOn = disguisedOn.value,
+                            iconMode = iconMode.value,
                             onOpenAccessibility = {
                                 startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                             },
                             onEnableAdmin = { requestAdmin() },
                             onToggleDns = { on -> toggleDns(on) },
-                            onToggleDisguise = { on ->
-                                AppDisguise.setDisguised(this@MainActivity, on)
-                                disguisedOn.value = on
+                            onSetIconMode = { mode ->
+                                AppDisguise.setMode(this@MainActivity, mode)
+                                iconMode.value = mode
                             }
                         )
                     } else {
@@ -101,7 +101,7 @@ class MainActivity : ComponentActivity() {
         accessibilityOn.value = isAccessibilityEnabled(this)
         adminOn.value = dpm.isAdminActive(QalqonAdminReceiver.component(this))
         dnsOn.value = dnsPrefs.enabled
-        disguisedOn.value = AppDisguise.isDisguised(this)
+        iconMode.value = AppDisguise.currentMode(this)
     }
 
     private fun toggleDns(on: Boolean) {
@@ -182,12 +182,23 @@ private fun PinGate(pinStore: PinStore, onUnlock: () -> Unit) {
         Button(onClick = {
             if (pinStore.verify(pin)) onUnlock() else { error = true; pin = "" }
         }) { Text("Unlock") }
-        Spacer(Modifier.height(20.dp))
-        Text(
-            "Default password is 1234 — change it below after unlocking.",
-            style = MaterialTheme.typography.bodySmall
-        )
+        if (!pinStore.isConfigured) {
+            Spacer(Modifier.height(20.dp))
+            Text(
+                "First time: default password is 1234 — change it after unlocking.",
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
     }
+}
+
+@Composable
+private fun IconModeChip(label: String, selected: Boolean, onClick: () -> Unit) {
+    FilterChip(
+        selected = selected,
+        onClick = onClick,
+        label = { Text(label) }
+    )
 }
 
 @Composable
@@ -198,11 +209,11 @@ private fun Dashboard(
     accessibilityOn: Boolean,
     adminOn: Boolean,
     dnsOn: Boolean,
-    disguisedOn: Boolean,
+    iconMode: AppDisguise.Mode,
     onOpenAccessibility: () -> Unit,
     onEnableAdmin: () -> Unit,
     onToggleDns: (Boolean) -> Unit,
-    onToggleDisguise: (Boolean) -> Unit
+    onSetIconMode: (AppDisguise.Mode) -> Unit
 ) {
     var query by remember { mutableStateOf("") }
     // Local reactive copy of the protected set.
@@ -246,13 +257,35 @@ private fun Dashboard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(Modifier.weight(1f)) {
-                    Text("Disguise app icon")
+                    Text("Home-screen icon")
                     Text(
-                        "Shows as \"Calculator\" on the home screen. Still opens for you.",
+                        when (iconMode) {
+                            AppDisguise.Mode.NORMAL -> "Normal (Aqlli Qalqon shield)."
+                            AppDisguise.Mode.DISGUISE -> "Disguised as \"Calculator\"."
+                            AppDisguise.Mode.HIDDEN -> "Hidden. Reopen: press Volume Up 5× fast."
+                        },
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
-                Switch(checked = disguisedOn, onCheckedChange = onToggleDisguise)
+            }
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                IconModeChip("Normal", iconMode == AppDisguise.Mode.NORMAL) {
+                    onSetIconMode(AppDisguise.Mode.NORMAL)
+                }
+                IconModeChip("Calculator", iconMode == AppDisguise.Mode.DISGUISE) {
+                    onSetIconMode(AppDisguise.Mode.DISGUISE)
+                }
+                IconModeChip("Hidden", iconMode == AppDisguise.Mode.HIDDEN) {
+                    onSetIconMode(AppDisguise.Mode.HIDDEN)
+                }
+            }
+            if (iconMode == AppDisguise.Mode.HIDDEN) {
+                Text(
+                    "⚠ No icon. Reopen by pressing Volume Up 5× quickly (needs the " +
+                        "protection service on). If that fails, reinstall the app.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
             }
             Spacer(Modifier.height(10.dp))
             ChangePin(pinStore)
