@@ -8,6 +8,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # Auto-incrementing version so every build installs over the last.
+      VERSION_CODE: ${{ github.run_number }}
+      VERSION_NAME: 1.0.${{ github.run_number }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -47,11 +51,11 @@ jobs:
       - name: Rename APK
         run: |
           mkdir -p dist
-          cp app/build/outputs/apk/release/app-release.apk "dist/AqlliQalqon-v1.0.0.apk"
+          cp app/build/outputs/apk/release/app-release.apk "dist/AqlliQalqon-v${VERSION_NAME}.apk"
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AqlliQalqon-v1.0.0
-          path: dist/AqlliQalqon-v1.0.0.apk
+          name: AqlliQalqon-v${{ env.VERSION_NAME }}
+          path: dist/AqlliQalqon-v${{ env.VERSION_NAME }}.apk
           if-no-files-found: error

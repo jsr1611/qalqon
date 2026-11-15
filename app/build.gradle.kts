@@ -14,8 +14,9 @@ android {
         applicationId = "uz.jumanazar.qalqon"
         minSdk = 29
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        // Driven by CI (GitHub run number) so every build bumps; falls back for local builds.
+        versionCode = (System.getenv("VERSION_CODE") ?: "1").toInt()
+        versionName = System.getenv("VERSION_NAME") ?: "1.0.0"
     }
 
     signingConfigs {
