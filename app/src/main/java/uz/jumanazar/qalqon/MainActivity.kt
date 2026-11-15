@@ -40,8 +40,10 @@ class MainActivity : ComponentActivity() {
     private val adminOn = mutableStateOf(false)
     private val dnsOn = mutableStateOf(false)
     private val iconMode = mutableStateOf(AppDisguise.Mode.NORMAL)
+    private val bioOn = mutableStateOf(false)
     private lateinit var dpm: DevicePolicyManager
     private lateinit var dnsPrefs: DnsPrefs
+    private lateinit var bioPrefs: BioPrefs
 
     private val vpnConsent = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -57,6 +59,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         dpm = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
         dnsPrefs = DnsPrefs(this)
+        bioPrefs = BioPrefs(this)
+        val bioAvailable = BiometricAuth.isAvailable(this)
         val pinStore = PinStore(this)
         val store = ProtectedAppsStore(this)
         val apps = loadLaunchableApps()
@@ -74,6 +78,9 @@ class MainActivity : ComponentActivity() {
                             adminOn = adminOn.value,
                             dnsOn = dnsOn.value,
                             iconMode = iconMode.value,
+                            bioAvailable = bioAvailable,
+                            bioOn = bioOn.value,
+                            onToggleBio = { on -> bioPrefs.enabled = on; bioOn.value = on },
                             onOpenAccessibility = {
                                 startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                             },
@@ -102,6 +109,7 @@ class MainActivity : ComponentActivity() {
         adminOn.value = dpm.isAdminActive(QalqonAdminReceiver.component(this))
         dnsOn.value = dnsPrefs.enabled
         iconMode.value = AppDisguise.currentMode(this)
+        bioOn.value = bioPrefs.enabled
     }
 
     private fun toggleDns(on: Boolean) {
@@ -210,6 +218,9 @@ private fun Dashboard(
     adminOn: Boolean,
     dnsOn: Boolean,
     iconMode: AppDisguise.Mode,
+    bioAvailable: Boolean,
+    bioOn: Boolean,
+    onToggleBio: (Boolean) -> Unit,
     onOpenAccessibility: () -> Unit,
     onEnableAdmin: () -> Unit,
     onToggleDns: (Boolean) -> Unit,
@@ -286,6 +297,15 @@ private fun Dashboard(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.error
                 )
+            }
+            if (bioAvailable) {
+                Row(
+                    Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Unlock with fingerprint / face", Modifier.weight(1f))
+                    Switch(checked = bioOn, onCheckedChange = onToggleBio)
+                }
             }
             Spacer(Modifier.height(10.dp))
             ChangePin(pinStore)

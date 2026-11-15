@@ -2,7 +2,6 @@ package uz.jumanazar.qalqon.lock
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -13,6 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentActivity
+import uz.jumanazar.qalqon.BioPrefs
+import uz.jumanazar.qalqon.BiometricAuth
 import uz.jumanazar.qalqon.PinStore
 
 /**
@@ -21,10 +23,15 @@ import uz.jumanazar.qalqon.PinStore
  *  - Wrong PIN    -> just clears the field. No counter, no timeout, no penalty.
  *  - Back / Home  -> leaves the app (sends the user to the launcher).
  */
-class LockActivity : ComponentActivity() {
+class LockActivity : FragmentActivity() {
 
     private lateinit var targetPackage: String
     private lateinit var pinStore: PinStore
+
+    private fun unlockAndReturn() {
+        LockState.unlock(targetPackage)
+        finish() // returns to the app behind us
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,24 +39,32 @@ class LockActivity : ComponentActivity() {
         pinStore = PinStore(this)
         setShowWhenLocked(true)
 
+        val bioEnabled = BioPrefs(this).enabled && BiometricAuth.isAvailable(this)
+
         setContent {
             MaterialTheme {
                 Surface(Modifier.fillMaxSize()) {
                     LockScreen(
+                        bioEnabled = bioEnabled,
                         onSubmit = { pin ->
-                            if (pinStore.verify(pin)) {
-                                LockState.unlock(targetPackage)
-                                finish() // returns to the app behind us
-                                true
-                            } else {
-                                false // wrong -> stay, no penalty
-                            }
+                            if (pinStore.verify(pin)) { unlockAndReturn(); true } else false
                         },
+                        onBiometric = { promptBiometric() },
                         onLeave = { goHome() }
                     )
                 }
             }
         }
+
+        if (bioEnabled) promptBiometric()
+    }
+
+    private fun promptBiometric() {
+        BiometricAuth.prompt(
+            activity = this,
+            onSuccess = { unlockAndReturn() },
+            onFallback = { /* stay on PIN screen */ }
+        )
     }
 
     private fun goHome() {
@@ -72,7 +87,12 @@ class LockActivity : ComponentActivity() {
 }
 
 @Composable
-private fun LockScreen(onSubmit: (String) -> Boolean, onLeave: () -> Unit) {
+private fun LockScreen(
+    bioEnabled: Boolean,
+    onSubmit: (String) -> Boolean,
+    onBiometric: () -> Unit,
+    onLeave: () -> Unit
+) {
     var pin by remember { mutableStateOf("") }
     var wrong by remember { mutableStateOf(false) }
 
@@ -108,6 +128,12 @@ private fun LockScreen(onSubmit: (String) -> Boolean, onLeave: () -> Unit) {
             },
             modifier = Modifier.fillMaxWidth()
         ) { Text("Unlock") }
+        if (bioEnabled) {
+            Spacer(Modifier.height(10.dp))
+            OutlinedButton(onClick = onBiometric, modifier = Modifier.fillMaxWidth()) {
+                Text("Use fingerprint / face")
+            }
+        }
         Spacer(Modifier.height(10.dp))
         OutlinedButton(onClick = onLeave, modifier = Modifier.fillMaxWidth()) {
             Text("Cancel")
