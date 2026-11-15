@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aqlli Qalqon</string>
+    <string name="admin_label">Aqlli Qalqon Device Owner</string>
+    <string name="admin_description">Enforces parental-control policies on this device. Managed by a parent PIN.</string>
+</resources>
