@@ -19,6 +19,7 @@ class ProtectedAppsStore(context: Context) {
     }
 
     private fun defaults(): MutableSet<String> = mutableSetOf(
+        "com.android.settings",              // Settings (blocks Accessibility/uninstall paths)
         "com.roblox.client",                 // Roblox
         "com.google.android.youtube",        // YouTube
         "com.android.chrome",                // Chrome

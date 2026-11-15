@@ -33,9 +33,18 @@ them inside browsers and web-views too. Caveat: while on, it blocks those sites 
 not the main gate. The app-locker (browser behind a password) is the primary
 control.
 
-> Trade-off: Accessibility-based locking is strong against kids grabbing a phone,
-> but a determined, tech-savvy teen could disable the service in Settings. For young
-> children it's rock solid.
+### Stealth & anti-tamper
+- **Anonymous lock screen** — the PIN gate over apps shows no app name/branding, so
+  the child can't tell what's blocking them.
+- **Hidden icon** — toggle in the dashboard removes the launcher icon; reopen by
+  dialing `*#*#725766#*#*` in the Phone app.
+- **Settings locked by default** — `com.android.settings` is protected, so the child
+  can't reach Accessibility, Device admin, or Uninstall without the password.
+- **Uninstall protection** — device-admin blocks one-tap uninstall.
+
+> Trade-off: still not bulletproof against a determined, tech-savvy teen (Safe Mode
+> or factory reset bypasses any non-device-owner app). For younger kids grabbing a
+> phone, the combo above is very hard to beat.
 
 ## Build — no Android Studio needed
 

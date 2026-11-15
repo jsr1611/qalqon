@@ -20,16 +20,36 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
 
-        <!-- Parent dashboard (the only launcher icon) -->
+        <!-- Parent dashboard -->
         <activity
             android:name=".MainActivity"
+            android:exported="false"
+            android:launchMode="singleTask" />
+
+        <!-- Launcher icon lives in an alias so it can be hidden at runtime. -->
+        <activity-alias
+            android:name=".Launcher"
+            android:targetActivity=".MainActivity"
             android:exported="true"
-            android:launchMode="singleTask">
+            android:enabled="true"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity-alias>
+
+        <!-- Opens the hidden dashboard via *#*#725766#*#* -->
+        <receiver
+            android:name=".stealth.SecretCodeReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SECRET_CODE" />
+                <data android:scheme="android_secret_code" android:host="725766" />
+            </intent-filter>
+        </receiver>
 
         <!-- Full-screen PIN gate drawn over protected apps -->
         <activity
