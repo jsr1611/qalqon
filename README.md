@@ -9,6 +9,8 @@ locks *only the apps you choose* behind your password or fingerprint, while the 
 of the phone stays fully usable. Wrong guesses have **no lockout penalty**, so a kid
 mashing the screen never locks *you* out.
 
+### 📥 [Download the latest APK](https://github.com/jsr1611/qalqon/releases/latest)
+
 </div>
 
 ---
