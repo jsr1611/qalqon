@@ -58,6 +58,20 @@ reset (only true device-owner mode can stop those). For younger kids grabbing a
 phone, the combo of locked apps + locked Settings + uninstall protection is very hard
 to beat.
 
+## 🔏 Privacy — zero data collection
+
+Aqlli Qalqon collects **nothing**. No analytics, no accounts, no servers, no tracking,
+no internet calls of its own. Everything stays on your device:
+
+- Your password is stored only as a **salted hash**, locally.
+- The protected-apps list and settings live in local storage only.
+- The accessibility service checks **only which app is in the foreground** to decide
+  whether to show the lock — it does **not** read screen content
+  (`canRetrieveWindowContent=false`).
+- The optional DNS filter runs **locally on your phone**; nothing is sent to us.
+
+It's open-source, so you can verify all of this yourself.
+
 ## 🛠 Build
 
 CI (`.github/workflows/build-apk.yml`) builds a **signed** APK on every push and on
