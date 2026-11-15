@@ -1,75 +1,69 @@
-# Aqlli Qalqon
+<div align="center">
 
-A PIN **app-locker** for Android — made for **shared family phones**. The parent
-uses the phone normally; apps kids abuse (Roblox, YouTube, browsers, stores) open
-only after the **parent password**. Wrong passwords have **no penalty** (no
-timeout, no OS lockout), so kids hammering it never lock the parent out.
+# 🛡 Aqlli Qalqon
 
-Package: `uz.jumanazar.qalqon` · Display name: **Aqlli Qalqon** ("Smart Shield")
+**A free, open-source PIN/fingerprint app-locker for shared family Android phones.**
 
-## How it works
+Kids grab your phone and dive into Roblox, YouTube or browser games — Aqlli Qalqon
+locks *only the apps you choose* behind your password or fingerprint, while the rest
+of the phone stays fully usable. Wrong guesses have **no lockout penalty**, so a kid
+mashing the screen never locks *you* out.
 
-- An **Accessibility service** (`LockAccessibilityService`) watches which app comes
-  to the foreground. If it's a protected app, a full-screen PIN gate
-  (`LockActivity`) appears over it.
-  - Correct password → the app opens for you.
-  - Wrong / Cancel / Back → the app closes; retry as many times as you want, no
-    penalty.
-  - Leaving a protected app re-locks it, so re-entry asks again.
-- **Parent dashboard** (`MainActivity`, PIN-gated): turn the service on, pick which
-  apps are protected (full installed-app list with search), change the password,
-  and enable uninstall protection. Default password **1234**.
-- **Uninstall protection**: registers as a *device admin* (not device owner), so the
-  app can't be removed from the launcher in one tap.
+</div>
 
-This needs **no device-owner, no account removal, no factory reset** — just install
-and enable the Accessibility service.
+---
 
-### Optional: DNS filter
-A parent-toggled switch (**off by default**) runs a local `VpnService`
-(`DnsFilterVpnService`) that returns NXDOMAIN for YouTube/Roblox domains, blocking
-them inside browsers and web-views too. Caveat: while on, it blocks those sites for
-*everyone, including the parent*, until toggled off — so it's an occasional extra,
-not the main gate. The app-locker (browser behind a password) is the primary
-control.
+## ✨ Features
 
-### Stealth & anti-tamper
-- **Anonymous lock screen** — the PIN gate over apps shows no app name/branding, so
-  the child can't tell what's blocking them.
-- **Home-screen icon modes** (dashboard):
-  - **Normal** — the shield icon.
-  - **Calculator** — disguised as a "Calculator" app; still opens for the parent.
-    (Always leaves a working icon — no lock-out risk.)
-  - **Hidden** — no icon at all. Reopen with **Volume Up pressed 5× quickly**
-    (caught by the accessibility service). If the service is off, reinstall to recover.
-- **Settings locked by default** — `com.android.settings` is protected, so the child
-  can't reach Accessibility, Device admin, or Uninstall without the password.
-- **Uninstall protection** — device-admin blocks one-tap uninstall.
+- 🔒 **Per-app lock** — pick any apps (Roblox, YouTube, browsers, stores, banking…);
+  they open only with your password.
+- 👆 **Fingerprint or PIN** — unlock in a second (PIN always works as fallback).
+- ♾️ **No lockout penalty** — unlimited wrong attempts, no timeout, no OS lock-out.
+- 🥷 **Stealth** — hide the launcher icon or disguise it as a **"Calculator."**
+- ⚙️ **Settings locked** — kids can't reach Accessibility / uninstall paths.
+- 🚫 **Uninstall protection** — registered as device admin; can't be removed without
+  your password.
+- 🌐 **Optional DNS filter** — block YouTube/Roblox inside browsers too.
+- 📵 **No root, no device-owner, no account removal** — installs on any Samsung /
+  Android phone (Android 10+).
 
-> Trade-off: still not bulletproof against a determined, tech-savvy teen (Safe Mode
-> or factory reset bypasses any non-device-owner app). For younger kids grabbing a
-> phone, the combo above is very hard to beat.
+## 📥 Install
 
-## Build — no Android Studio needed
+1. Download the latest **`AqlliQalqon-vX.Y.Z.apk`** (from Releases, or the Actions
+   artifacts).
+2. Copy it to the phone and tap to install.
+   - Samsung: turn off **Settings → Security and privacy → Auto Blocker** first.
+   - If **Google Play Protect** blocks it, tap *More details → Install anyway*, or
+     install via `adb install -r`.
+3. Open **Aqlli Qalqon** (default password **1234**) and **change the password**.
+4. **Settings → Apps → Aqlli Qalqon → ⋮ → Allow restricted settings**, then
+   **Settings → Accessibility → Aqlli Qalqon → On** (this powers the locking).
+5. (Optional) Enable **Uninstall protection** and pick your protected apps.
 
-CI (`.github/workflows/build-apk.yml`) builds a signed APK on every push to `main`
-and on manual dispatch, uploading `AqlliQalqon-v1.0.x.apk` as an artifact.
-Keystore + 4 secrets are already configured (see repo secrets).
+> **First test, then trust:** open a locked app to confirm the password screen
+> appears, and — if using Hidden mode — confirm **Volume Up ×5** reopens the app
+> *before* hiding the icon.
 
-## Install & set up (on the phone)
+## 🧱 How it works
 
-1. Download the latest APK from **Actions → latest run → Artifacts**.
-2. `adb install -r AqlliQalqon-v1.0.x.apk` (or copy to the phone and tap it).
-3. Open **Aqlli Qalqon** (password `1234`) → **change the password**.
-4. Tap **Protection service → Off** → it opens Accessibility settings → enable
-   **Aqlli Qalqon**.
-5. (Optional) Tap **Uninstall protection** to make it a device admin.
-6. Pick the apps to protect (Roblox, YouTube, Chrome, Samsung Internet, Play Store,
-   Galaxy Store are on by default).
+An Android **Accessibility service** watches which app comes to the foreground; if
+it's protected, a full-screen (anonymous) PIN/biometric gate appears over it. It uses
+only standard Android APIs — no root, no device-owner — so it's a good fit for a
+*shared* phone the parent keeps using normally.
 
-Done — handing the phone to a kid now blocks those apps behind your password.
+**Honest limits:** a determined, tech-savvy teen could use Safe Mode or a factory
+reset (only true device-owner mode can stop those). For younger kids grabbing a
+phone, the combo of locked apps + locked Settings + uninstall protection is very hard
+to beat.
 
-## Local build (optional)
+## 🛠 Build
 
-The wrapper jar is fetched by CI; to build locally run `gradle wrapper` once, then
-`./gradlew assembleRelease`.
+CI (`.github/workflows/build-apk.yml`) builds a **signed** APK on every push and on
+manual dispatch, with an auto-incrementing version (`1.0.<run#>`). To build locally:
+`gradle wrapper` once, then `./gradlew assembleRelease`.
+
+Package: `uz.jumanazar.qalqon` · minSdk 29 · targetSdk 35 · Kotlin + Jetpack Compose.
+
+## 📄 License
+
+MIT — use it, fork it, improve it. Made for parents, by a parent.
