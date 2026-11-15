@@ -9,7 +9,9 @@ import androidx.fragment.app.FragmentActivity
 /** Fingerprint / face unlock via BiometricPrompt (WEAK = includes face on Samsung). */
 object BiometricAuth {
 
-    private const val AUTHENTICATORS = BiometricManager.Authenticators.BIOMETRIC_WEAK
+    // STRONG = Class 3 (fingerprint). Excludes passive "weak" face that glances
+    // through, so unlocking requires a deliberate fingerprint touch.
+    private const val AUTHENTICATORS = BiometricManager.Authenticators.BIOMETRIC_STRONG
 
     /** A fingerprint or face is enrolled and usable. */
     fun isAvailable(ctx: Context): Boolean =

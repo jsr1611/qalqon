@@ -7,9 +7,9 @@ import android.content.Intent
 import android.net.VpnService
 import android.os.Bundle
 import android.provider.Settings
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.FragmentActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -34,7 +34,7 @@ import uz.jumanazar.qalqon.vpn.DnsPrefs
 
 data class AppInfo(val label: String, val pkg: String)
 
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
 
     private val accessibilityOn = mutableStateOf(false)
     private val adminOn = mutableStateOf(false)
@@ -92,11 +92,20 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     } else {
-                        PinGate(pinStore) { unlocked = true }
+                        PinGate(
+                            pinStore = pinStore,
+                            bioEnabled = bioAvailable && bioPrefs.enabled,
+                            onBiometric = { promptDashboardBiometric { unlocked = true } },
+                            onUnlock = { unlocked = true }
+                        )
                     }
                 }
             }
         }
+    }
+
+    private fun promptDashboardBiometric(onSuccess: () -> Unit) {
+        BiometricAuth.prompt(activity = this, onSuccess = onSuccess, onFallback = { })
     }
 
     override fun onResume() {
@@ -163,9 +172,18 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun PinGate(pinStore: PinStore, onUnlock: () -> Unit) {
+private fun PinGate(
+    pinStore: PinStore,
+    bioEnabled: Boolean,
+    onBiometric: () -> Unit,
+    onUnlock: () -> Unit
+) {
     var pin by remember { mutableStateOf("") }
     var error by remember { mutableStateOf(false) }
+
+    // Offer biometric first when enabled; password stays available as fallback.
+    LaunchedEffect(Unit) { if (bioEnabled) onBiometric() }
+
     Column(
         Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.Center,
@@ -190,6 +208,10 @@ private fun PinGate(pinStore: PinStore, onUnlock: () -> Unit) {
         Button(onClick = {
             if (pinStore.verify(pin)) onUnlock() else { error = true; pin = "" }
         }) { Text("Unlock") }
+        if (bioEnabled) {
+            Spacer(Modifier.height(8.dp))
+            OutlinedButton(onClick = onBiometric) { Text("Use fingerprint / face") }
+        }
         if (!pinStore.isConfigured) {
             Spacer(Modifier.height(20.dp))
             Text(
@@ -227,89 +249,88 @@ private fun Dashboard(
     onSetIconMode: (AppDisguise.Mode) -> Unit
 ) {
     var query by remember { mutableStateOf("") }
-    // Local reactive copy of the protected set.
     var protectedSet by remember { mutableStateOf(store.all()) }
+    var settingsExpanded by remember { mutableStateOf(false) }
 
-    Column(Modifier.fillMaxSize()) {
-        // --- Status + settings header (scrolls with nothing; fixed top) ---
-        Column(Modifier.padding(horizontal = 20.dp, vertical = 14.dp)) {
-            Text("Aqlli Qalqon", style = MaterialTheme.typography.headlineSmall)
-            Spacer(Modifier.height(10.dp))
+    val filtered = remember(query, apps) {
+        if (query.isBlank()) apps
+        else apps.filter { it.label.contains(query, true) || it.pkg.contains(query, true) }
+    }
 
-            StatusRow(
-                label = "Protection service",
-                ok = accessibilityOn,
-                okText = "On",
-                badText = "Off — tap to enable",
-                onClick = onOpenAccessibility
-            )
-            StatusRow(
-                label = "Uninstall protection",
-                ok = adminOn,
-                okText = "On",
-                badText = "Off — tap to enable",
-                onClick = onEnableAdmin
-            )
-            Row(
-                Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+    // Everything lives in one scrolling list; the settings block collapses so the
+    // app list gets the screen.
+    LazyColumn(Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
+        item {
+            Spacer(Modifier.height(12.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    Text("Block YouTube/Roblox in browsers")
+                    Text("Aqlli Qalqon", style = MaterialTheme.typography.headlineSmall)
                     Text(
-                        "Optional DNS filter. Also blocks them for you until turned off.",
-                        style = MaterialTheme.typography.bodySmall
+                        "Service: ${if (accessibilityOn) "On" else "Off"}   ·   " +
+                            "Uninstall: ${if (adminOn) "On" else "Off"}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (accessibilityOn && adminOn)
+                            MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.error
                     )
                 }
-                Switch(checked = dnsOn, onCheckedChange = onToggleDns)
-            }
-            Row(
-                Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(Modifier.weight(1f)) {
-                    Text("Home-screen icon")
-                    Text(
-                        when (iconMode) {
-                            AppDisguise.Mode.NORMAL -> "Normal (Aqlli Qalqon shield)."
-                            AppDisguise.Mode.DISGUISE -> "Disguised as \"Calculator\"."
-                            AppDisguise.Mode.HIDDEN -> "Hidden. Reopen: press Volume Up 5× fast."
-                        },
-                        style = MaterialTheme.typography.bodySmall
-                    )
+                TextButton(onClick = { settingsExpanded = !settingsExpanded }) {
+                    Text(if (settingsExpanded) "Hide ▲" else "Settings ▼")
                 }
             }
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                IconModeChip("Normal", iconMode == AppDisguise.Mode.NORMAL) {
-                    onSetIconMode(AppDisguise.Mode.NORMAL)
-                }
-                IconModeChip("Calculator", iconMode == AppDisguise.Mode.DISGUISE) {
-                    onSetIconMode(AppDisguise.Mode.DISGUISE)
-                }
-                IconModeChip("Hidden", iconMode == AppDisguise.Mode.HIDDEN) {
-                    onSetIconMode(AppDisguise.Mode.HIDDEN)
-                }
-            }
-            if (iconMode == AppDisguise.Mode.HIDDEN) {
-                Text(
-                    "⚠ No icon. Reopen by pressing Volume Up 5× quickly (needs the " +
-                        "protection service on). If that fails, reinstall the app.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-            if (bioAvailable) {
+
+            if (settingsExpanded) {
+                StatusRow("Protection service", accessibilityOn, "On",
+                    "Off — tap to enable", onOpenAccessibility)
+                StatusRow("Uninstall protection", adminOn, "On",
+                    "Off — tap to enable", onEnableAdmin)
                 Row(
                     Modifier.fillMaxWidth().padding(vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Unlock with fingerprint / face", Modifier.weight(1f))
-                    Switch(checked = bioOn, onCheckedChange = onToggleBio)
+                    Column(Modifier.weight(1f)) {
+                        Text("Block YouTube/Roblox in browsers")
+                        Text(
+                            "Optional DNS filter. Also blocks them for you until turned off.",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                    Switch(checked = dnsOn, onCheckedChange = onToggleDns)
                 }
+                Text("Home-screen icon", Modifier.padding(top = 8.dp))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    IconModeChip("Normal", iconMode == AppDisguise.Mode.NORMAL) {
+                        onSetIconMode(AppDisguise.Mode.NORMAL)
+                    }
+                    IconModeChip("Calculator", iconMode == AppDisguise.Mode.DISGUISE) {
+                        onSetIconMode(AppDisguise.Mode.DISGUISE)
+                    }
+                    IconModeChip("Hidden", iconMode == AppDisguise.Mode.HIDDEN) {
+                        onSetIconMode(AppDisguise.Mode.HIDDEN)
+                    }
+                }
+                if (iconMode == AppDisguise.Mode.HIDDEN) {
+                    Text(
+                        "⚠ No icon. Reopen by pressing Volume Up 5× quickly (needs the " +
+                            "protection service on). If that fails, reinstall the app.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+                if (bioAvailable) {
+                    Row(
+                        Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("Unlock with fingerprint / face", Modifier.weight(1f))
+                        Switch(checked = bioOn, onCheckedChange = onToggleBio)
+                    }
+                }
+                Spacer(Modifier.height(8.dp))
+                ChangePin(pinStore)
             }
+
             Spacer(Modifier.height(10.dp))
-            ChangePin(pinStore)
-            Spacer(Modifier.height(8.dp))
             HorizontalDivider()
             Spacer(Modifier.height(8.dp))
             Text("Protected apps (need password to open)",
@@ -321,32 +342,26 @@ private fun Dashboard(
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
+            Spacer(Modifier.height(8.dp))
         }
 
-        val filtered = remember(query, apps) {
-            if (query.isBlank()) apps
-            else apps.filter { it.label.contains(query, true) || it.pkg.contains(query, true) }
-        }
-
-        LazyColumn(Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
-            items(filtered, key = { it.pkg }) { app ->
-                val isProtected = protectedSet.contains(app.pkg)
-                Row(
-                    Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(Modifier.weight(1f)) {
-                        Text(app.label, style = MaterialTheme.typography.bodyLarge)
-                        Text(app.pkg, style = MaterialTheme.typography.bodySmall)
-                    }
-                    Switch(
-                        checked = isProtected,
-                        onCheckedChange = { on ->
-                            store.setProtected(app.pkg, on)
-                            protectedSet = store.all()
-                        }
-                    )
+        items(filtered, key = { it.pkg }) { app ->
+            val isProtected = protectedSet.contains(app.pkg)
+            Row(
+                Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(Modifier.weight(1f)) {
+                    Text(app.label, style = MaterialTheme.typography.bodyLarge)
+                    Text(app.pkg, style = MaterialTheme.typography.bodySmall)
                 }
+                Switch(
+                    checked = isProtected,
+                    onCheckedChange = { on ->
+                        store.setProtected(app.pkg, on)
+                        protectedSet = store.all()
+                    }
+                )
             }
         }
     }
