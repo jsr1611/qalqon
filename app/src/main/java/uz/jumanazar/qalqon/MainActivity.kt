@@ -4,11 +4,12 @@ import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.net.VpnService
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import uz.jumanazar.qalqon.admin.QalqonAdminReceiver
 import uz.jumanazar.qalqon.lock.LockAccessibilityService
 import uz.jumanazar.qalqon.lock.ProtectedAppsStore
+import uz.jumanazar.qalqon.vpn.DnsFilterVpnService
+import uz.jumanazar.qalqon.vpn.DnsPrefs
 
 data class AppInfo(val label: String, val pkg: String)
 
@@ -34,11 +37,24 @@ class MainActivity : ComponentActivity() {
 
     private val accessibilityOn = mutableStateOf(false)
     private val adminOn = mutableStateOf(false)
+    private val dnsOn = mutableStateOf(false)
     private lateinit var dpm: DevicePolicyManager
+    private lateinit var dnsPrefs: DnsPrefs
+
+    private val vpnConsent = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            DnsFilterVpnService.start(this)
+            dnsPrefs.enabled = true
+            dnsOn.value = true
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dpm = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+        dnsPrefs = DnsPrefs(this)
         val pinStore = PinStore(this)
         val store = ProtectedAppsStore(this)
         val apps = loadLaunchableApps()
@@ -54,10 +70,12 @@ class MainActivity : ComponentActivity() {
                             pinStore = pinStore,
                             accessibilityOn = accessibilityOn.value,
                             adminOn = adminOn.value,
+                            dnsOn = dnsOn.value,
                             onOpenAccessibility = {
                                 startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                             },
-                            onEnableAdmin = { requestAdmin() }
+                            onEnableAdmin = { requestAdmin() },
+                            onToggleDns = { on -> toggleDns(on) }
                         )
                     } else {
                         PinGate(pinStore) { unlocked = true }
@@ -75,6 +93,24 @@ class MainActivity : ComponentActivity() {
     private fun refreshStatus() {
         accessibilityOn.value = isAccessibilityEnabled(this)
         adminOn.value = dpm.isAdminActive(QalqonAdminReceiver.component(this))
+        dnsOn.value = dnsPrefs.enabled
+    }
+
+    private fun toggleDns(on: Boolean) {
+        if (on) {
+            val consent = VpnService.prepare(this)
+            if (consent != null) {
+                vpnConsent.launch(consent) // asks the user to allow the VPN once
+            } else {
+                DnsFilterVpnService.start(this)
+                dnsPrefs.enabled = true
+                dnsOn.value = true
+            }
+        } else {
+            DnsFilterVpnService.stop(this)
+            dnsPrefs.enabled = false
+            dnsOn.value = false
+        }
     }
 
     private fun requestAdmin() {
@@ -153,8 +189,10 @@ private fun Dashboard(
     pinStore: PinStore,
     accessibilityOn: Boolean,
     adminOn: Boolean,
+    dnsOn: Boolean,
     onOpenAccessibility: () -> Unit,
-    onEnableAdmin: () -> Unit
+    onEnableAdmin: () -> Unit,
+    onToggleDns: (Boolean) -> Unit
 ) {
     var query by remember { mutableStateOf("") }
     // Local reactive copy of the protected set.
@@ -180,6 +218,19 @@ private fun Dashboard(
                 badText = "Off — tap to enable",
                 onClick = onEnableAdmin
             )
+            Row(
+                Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(Modifier.weight(1f)) {
+                    Text("Block YouTube/Roblox in browsers")
+                    Text(
+                        "Optional DNS filter. Also blocks them for you until turned off.",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+                Switch(checked = dnsOn, onCheckedChange = onToggleDns)
+            }
             Spacer(Modifier.height(10.dp))
             ChangePin(pinStore)
             Spacer(Modifier.height(8.dp))

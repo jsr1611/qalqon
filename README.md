@@ -25,6 +25,14 @@ Package: `uz.jumanazar.qalqon` · Display name: **Aqlli Qalqon** ("Smart Shield"
 This needs **no device-owner, no account removal, no factory reset** — just install
 and enable the Accessibility service.
 
+### Optional: DNS filter
+A parent-toggled switch (**off by default**) runs a local `VpnService`
+(`DnsFilterVpnService`) that returns NXDOMAIN for YouTube/Roblox domains, blocking
+them inside browsers and web-views too. Caveat: while on, it blocks those sites for
+*everyone, including the parent*, until toggled off — so it's an occasional extra,
+not the main gate. The app-locker (browser behind a password) is the primary
+control.
+
 > Trade-off: Accessibility-based locking is strong against kids grabbing a phone,
 > but a determined, tech-savvy teen could disable the service in Settings. For young
 > children it's rock solid.
