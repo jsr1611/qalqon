@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Aqlli Qalqon</string>
-    <string name="admin_label">Aqlli Qalqon Device Owner</string>
-    <string name="admin_description">Enforces parental-control policies on this device. Managed by a parent PIN.</string>
+    <string name="admin_label">Aqlli Qalqon protection</string>
+    <string name="admin_description">Prevents the app from being uninstalled without the parent password.</string>
+    <string name="accessibility_description">Aqlli Qalqon watches which app opens so it can ask for the parent password before opening protected apps. It does not read screen content.</string>
 </resources>
