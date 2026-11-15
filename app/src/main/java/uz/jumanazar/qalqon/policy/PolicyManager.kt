@@ -5,7 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.os.UserManager
 import android.util.Log
-import uz.jumanazar.qalqon.admin.KidGuardAdminReceiver
+import uz.jumanazar.qalqon.admin.QalqonAdminReceiver
 
 /**
  * Thin wrapper over DevicePolicyManager. Every call is guarded so the dashboard
@@ -17,7 +17,7 @@ class PolicyManager(private val context: Context) {
     private val dpm =
         context.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
 
-    private val admin: ComponentName = KidGuardAdminReceiver.component(context)
+    private val admin: ComponentName = QalqonAdminReceiver.component(context)
 
     val isDeviceOwner: Boolean
         get() = dpm.isDeviceOwnerApp(context.packageName)

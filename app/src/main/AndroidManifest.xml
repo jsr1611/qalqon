@@ -26,7 +26,7 @@
 
         <!-- Device Owner / Device Admin receiver -->
         <receiver
-            android:name=".admin.KidGuardAdminReceiver"
+            android:name=".admin.QalqonAdminReceiver"
             android:exported="true"
             android:permission="android.permission.BIND_DEVICE_ADMIN">
             <meta-data

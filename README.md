@@ -49,7 +49,7 @@ CI (`.github/workflows/build-apk.yml`) builds a signed APK on every push to
 2. Install and set device owner:
    ```bash
    adb install -r app-release.apk
-   adb shell dpm set-device-owner uz.jumanazar.qalqon/.admin.KidGuardAdminReceiver
+   adb shell dpm set-device-owner uz.jumanazar.qalqon/.admin.QalqonAdminReceiver
    ```
 3. Open the app once to activate policies (default PIN **1234** — change it).
 4. Sign accounts back in and re-enable **Auto Blocker**.

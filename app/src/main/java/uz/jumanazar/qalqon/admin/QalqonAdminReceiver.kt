@@ -8,7 +8,7 @@ import android.util.Log
 import uz.jumanazar.qalqon.policy.PolicyManager
 import uz.jumanazar.qalqon.vpn.DnsFilterVpnService
 
-class KidGuardAdminReceiver : DeviceAdminReceiver() {
+class QalqonAdminReceiver : DeviceAdminReceiver() {
 
     override fun onEnabled(context: Context, intent: Intent) {
         super.onEnabled(context, intent)
@@ -28,6 +28,6 @@ class KidGuardAdminReceiver : DeviceAdminReceiver() {
     companion object {
         private const val TAG = "QalqonAdmin"
         fun component(context: Context) =
-            ComponentName(context, KidGuardAdminReceiver::class.java)
+            ComponentName(context, QalqonAdminReceiver::class.java)
     }
 }
