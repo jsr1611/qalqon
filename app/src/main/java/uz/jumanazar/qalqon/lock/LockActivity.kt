@@ -81,9 +81,11 @@ private fun LockScreen(onSubmit: (String) -> Boolean, onLeave: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("🛡 Aqlli Qalqon", style = MaterialTheme.typography.headlineMedium)
-        Spacer(Modifier.height(8.dp))
-        Text("Enter password to open this app", style = MaterialTheme.typography.bodyMedium)
+        // Deliberately generic: no app name, no branding. The child must not learn
+        // which app is doing the blocking.
+        Text("🔒", style = MaterialTheme.typography.displayMedium)
+        Spacer(Modifier.height(12.dp))
+        Text("Enter password", style = MaterialTheme.typography.titleMedium)
         Spacer(Modifier.height(20.dp))
         OutlinedTextField(
             value = pin,
@@ -96,7 +98,7 @@ private fun LockScreen(onSubmit: (String) -> Boolean, onLeave: () -> Unit) {
         )
         if (wrong) {
             Spacer(Modifier.height(6.dp))
-            Text("Wrong password — try again", color = MaterialTheme.colorScheme.error)
+            Text("Incorrect", color = MaterialTheme.colorScheme.error)
         }
         Spacer(Modifier.height(18.dp))
         Button(
