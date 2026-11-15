@@ -36,8 +36,10 @@ control.
 ### Stealth & anti-tamper
 - **Anonymous lock screen** — the PIN gate over apps shows no app name/branding, so
   the child can't tell what's blocking them.
-- **Hidden icon** — toggle in the dashboard removes the launcher icon; reopen by
-  dialing `*#*#725766#*#*` in the Phone app.
+- **Disguised icon** — toggle in the dashboard makes the launcher icon show as a
+  **"Calculator"** (fake name + icon). It still opens the dashboard for the parent.
+  Exactly one of the two launcher aliases is ever enabled, so there is always a
+  working icon — no lock-out risk (unlike hiding, which left dead icons on One UI).
 - **Settings locked by default** — `com.android.settings` is protected, so the child
   can't reach Accessibility, Device admin, or Uninstall without the password.
 - **Uninstall protection** — device-admin blocks one-tap uninstall.

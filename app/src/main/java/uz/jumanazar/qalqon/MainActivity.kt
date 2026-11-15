@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import uz.jumanazar.qalqon.admin.QalqonAdminReceiver
 import uz.jumanazar.qalqon.lock.LockAccessibilityService
 import uz.jumanazar.qalqon.lock.ProtectedAppsStore
-import uz.jumanazar.qalqon.stealth.AppHider
+import uz.jumanazar.qalqon.stealth.AppDisguise
 import uz.jumanazar.qalqon.vpn.DnsFilterVpnService
 import uz.jumanazar.qalqon.vpn.DnsPrefs
 
@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
     private val accessibilityOn = mutableStateOf(false)
     private val adminOn = mutableStateOf(false)
     private val dnsOn = mutableStateOf(false)
-    private val hiddenOn = mutableStateOf(false)
+    private val disguisedOn = mutableStateOf(false)
     private lateinit var dpm: DevicePolicyManager
     private lateinit var dnsPrefs: DnsPrefs
 
@@ -73,15 +73,15 @@ class MainActivity : ComponentActivity() {
                             accessibilityOn = accessibilityOn.value,
                             adminOn = adminOn.value,
                             dnsOn = dnsOn.value,
-                            hiddenOn = hiddenOn.value,
+                            disguisedOn = disguisedOn.value,
                             onOpenAccessibility = {
                                 startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                             },
                             onEnableAdmin = { requestAdmin() },
                             onToggleDns = { on -> toggleDns(on) },
-                            onToggleHide = { on ->
-                                AppHider.setHidden(this@MainActivity, on)
-                                hiddenOn.value = on
+                            onToggleDisguise = { on ->
+                                AppDisguise.setDisguised(this@MainActivity, on)
+                                disguisedOn.value = on
                             }
                         )
                     } else {
@@ -101,7 +101,7 @@ class MainActivity : ComponentActivity() {
         accessibilityOn.value = isAccessibilityEnabled(this)
         adminOn.value = dpm.isAdminActive(QalqonAdminReceiver.component(this))
         dnsOn.value = dnsPrefs.enabled
-        hiddenOn.value = AppHider.isHidden(this)
+        disguisedOn.value = AppDisguise.isDisguised(this)
     }
 
     private fun toggleDns(on: Boolean) {
@@ -198,11 +198,11 @@ private fun Dashboard(
     accessibilityOn: Boolean,
     adminOn: Boolean,
     dnsOn: Boolean,
-    hiddenOn: Boolean,
+    disguisedOn: Boolean,
     onOpenAccessibility: () -> Unit,
     onEnableAdmin: () -> Unit,
     onToggleDns: (Boolean) -> Unit,
-    onToggleHide: (Boolean) -> Unit
+    onToggleDisguise: (Boolean) -> Unit
 ) {
     var query by remember { mutableStateOf("") }
     // Local reactive copy of the protected set.
@@ -246,13 +246,13 @@ private fun Dashboard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(Modifier.weight(1f)) {
-                    Text("Hide this app's icon")
+                    Text("Disguise app icon")
                     Text(
-                        "Reopen by dialing *#*#${AppHider.SECRET_CODE}#*#* in the Phone app.",
+                        "Shows as \"Calculator\" on the home screen. Still opens for you.",
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
-                Switch(checked = hiddenOn, onCheckedChange = onToggleHide)
+                Switch(checked = disguisedOn, onCheckedChange = onToggleDisguise)
             }
             Spacer(Modifier.height(10.dp))
             ChangePin(pinStore)

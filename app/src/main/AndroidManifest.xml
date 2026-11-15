@@ -26,7 +26,7 @@
             android:exported="false"
             android:launchMode="singleTask" />
 
-        <!-- Launcher icon lives in an alias so it can be hidden at runtime. -->
+        <!-- Real launcher icon (enabled by default) -->
         <activity-alias
             android:name=".Launcher"
             android:targetActivity=".MainActivity"
@@ -41,15 +41,22 @@
             </intent-filter>
         </activity-alias>
 
-        <!-- Opens the hidden dashboard via *#*#725766#*#* -->
-        <receiver
-            android:name=".stealth.SecretCodeReceiver"
-            android:exported="true">
+        <!-- Decoy launcher icon: looks like a Calculator (disabled by default).
+             Exactly one of these two aliases is ever enabled, so there is always a
+             working icon and the user can never be locked out. -->
+        <activity-alias
+            android:name=".LauncherDisguise"
+            android:targetActivity=".MainActivity"
+            android:exported="true"
+            android:enabled="false"
+            android:icon="@mipmap/ic_disguise"
+            android:roundIcon="@mipmap/ic_disguise"
+            android:label="@string/disguise_name">
             <intent-filter>
-                <action android:name="android.provider.Telephony.SECRET_CODE" />
-                <data android:scheme="android_secret_code" android:host="725766" />
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </receiver>
+        </activity-alias>
 
         <!-- Full-screen PIN gate drawn over protected apps -->
         <activity
