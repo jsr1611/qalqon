@@ -49,14 +49,31 @@ jobs:
           RECOVERY_SECRET: ${{ secrets.RECOVERY_SECRET }}
         run: ./gradlew assembleRelease --no-daemon
 
-      - name: Rename APK
+      - name: Build release AAB (for Google Play)
+        env:
+          KEYSTORE_PATH: ${{ runner.temp }}/release.keystore
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          RECOVERY_SECRET: ${{ secrets.RECOVERY_SECRET }}
+        run: ./gradlew bundleRelease --no-daemon
+
+      - name: Collect artifacts
         run: |
           mkdir -p dist
           cp app/build/outputs/apk/release/app-release.apk "dist/AqlliQalqon-v${VERSION_NAME}.apk"
+          cp app/build/outputs/bundle/release/app-release.aab "dist/AqlliQalqon-v${VERSION_NAME}.aab"
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: AqlliQalqon-v${{ env.VERSION_NAME }}
           path: dist/AqlliQalqon-v${{ env.VERSION_NAME }}.apk
+          if-no-files-found: error
+
+      - name: Upload AAB artifact (Google Play)
+        uses: actions/upload-artifact@v4
+        with:
+          name: AqlliQalqon-v${{ env.VERSION_NAME }}-play-aab
+          path: dist/AqlliQalqon-v${{ env.VERSION_NAME }}.aab
           if-no-files-found: error
