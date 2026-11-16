@@ -6,12 +6,13 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 
-/** Fingerprint / face unlock via BiometricPrompt (WEAK = includes face on Samsung). */
+/** Fingerprint / face unlock via BiometricPrompt. */
 object BiometricAuth {
 
-    // STRONG = Class 3 (fingerprint). Excludes passive "weak" face that glances
-    // through, so unlocking requires a deliberate fingerprint touch.
-    private const val AUTHENTICATORS = BiometricManager.Authenticators.BIOMETRIC_STRONG
+    // WEAK covers BOTH fingerprint and face (many phones are face-only, and Samsung
+    // face is Class 2 / "weak"). Confirmation is required below so passive face
+    // recognition still needs a deliberate tap to unlock.
+    private const val AUTHENTICATORS = BiometricManager.Authenticators.BIOMETRIC_WEAK
 
     /** A fingerprint or face is enrolled and usable. */
     fun isAvailable(ctx: Context): Boolean =
@@ -40,6 +41,7 @@ object BiometricAuth {
             .setSubtitle("Verify to continue")
             .setNegativeButtonText("Use password")
             .setAllowedAuthenticators(AUTHENTICATORS)
+            .setConfirmationRequired(true) // face must be confirmed, not a passive glance
             .build()
         prompt.authenticate(info)
     }
