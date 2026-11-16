@@ -41,6 +41,7 @@ class LockActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        uz.jumanazar.qalqon.LocaleHelper.apply(this)
         targetPackage = intent.getStringExtra(EXTRA_PACKAGE) ?: run { finish(); return }
         pinStore = PinStore(this)
         setShowWhenLocked(true)

@@ -30,4 +30,19 @@ object LocaleHelper {
         config.setLayoutDirection(locale) // RTL for Arabic
         return base.createConfigurationContext(config)
     }
+
+    /**
+     * Force the chosen locale onto an activity's own Resources. attachBaseContext's wrapped
+     * context is not always the one Compose reads from, so this guarantees the UI language.
+     */
+    @Suppress("DEPRECATION")
+    fun apply(ctx: Context) {
+        val locale = Locale.forLanguageTag(current(ctx))
+        Locale.setDefault(locale)
+        val res = ctx.resources
+        val config = Configuration(res.configuration)
+        config.setLocale(locale)
+        config.setLayoutDirection(locale)
+        res.updateConfiguration(config, res.displayMetrics)
+    }
 }

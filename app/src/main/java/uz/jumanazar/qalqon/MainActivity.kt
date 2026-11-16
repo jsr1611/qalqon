@@ -81,6 +81,7 @@ class MainActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LocaleHelper.apply(this)
         dpm = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
         dnsPrefs = DnsPrefs(this)
         bioPrefs = BioPrefs(this)
@@ -354,6 +355,10 @@ private fun Dashboard(
         filtered.filter { !protectedSet.contains(it.pkg) }
     }
     val setupDone = accessibilityOn && adminOn && pinStore.isConfigured
+    // Count only installed apps that are locked, so this matches the "Locked (N)" list header.
+    val lockedCount = remember(apps, protectedSet) {
+        apps.count { protectedSet.contains(it.pkg) }
+    }
 
     LazyColumn(Modifier.fillMaxSize().padding(horizontal = 18.dp)) {
         item {
@@ -406,7 +411,7 @@ private fun Dashboard(
                             )
                             Text(
                                 if (paused) stringResource(R.string.hero_paused_sub)
-                                else stringResource(R.string.hero_locked_sub, protectedSet.size),
+                                else stringResource(R.string.hero_locked_sub, lockedCount),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
