@@ -95,10 +95,10 @@ Open source. Feedback welcome: Telegram @jsr1611
 - [ ] Complete the Permissions + Accessibility declarations (§3).
 - [ ] Prepare graphics (§6), then roll out Internal testing.
 
-## 6. Graphics to prepare (you capture on the phone)
-- **App icon:** 512×512 PNG (exists as the launcher icon — export at 512).
-- **Feature graphic:** 1024×500 PNG.
-- **Phone screenshots:** 2–8, min 1080px on the long side. Good set: dashboard (protected), the
-  password screen, the language picker, the setup checklist.
+## 6. Graphics
+- **App icon:** 512×512 — ready at `docs/play-assets/icon-512.png`.
+- **Feature graphic:** 1024×500 — ready at `docs/play-assets/feature-1024x500.png`.
+- **Phone screenshots (you capture):** 2–8, min 1080px on the long side. Good set: dashboard
+  (protected), the password screen, the language picker, the setup checklist.
 
 _Internal testing needs no screenshots to start, but production does._
