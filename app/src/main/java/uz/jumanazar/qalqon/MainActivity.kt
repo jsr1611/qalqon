@@ -223,9 +223,13 @@ private fun PinGate(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("🛡 " + stringResource(R.string.app_name),
-            style = MaterialTheme.typography.headlineMedium)
-        Spacer(Modifier.height(16.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            BrandShield(Modifier.size(34.dp))
+            Spacer(Modifier.width(10.dp))
+            Text(stringResource(R.string.app_name),
+                style = MaterialTheme.typography.headlineMedium)
+        }
+        Spacer(Modifier.height(20.dp))
 
         if (!recoveryMode) {
             OutlinedTextField(
@@ -259,7 +263,8 @@ private fun PinGate(
             if (!pinStore.isConfigured) {
                 Spacer(Modifier.height(12.dp))
                 Text(stringResource(R.string.first_time_hint),
-                    style = MaterialTheme.typography.bodySmall)
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center)
             }
         } else {
             val today = remember {
@@ -267,7 +272,8 @@ private fun PinGate(
                     .format(java.util.Date())
             }
             Text(stringResource(R.string.recovery_intro),
-                style = MaterialTheme.typography.bodyMedium)
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center)
             Spacer(Modifier.height(12.dp))
             Text(stringResource(R.string.device_id_line, pinStore.deviceId),
                 style = MaterialTheme.typography.titleMedium)
