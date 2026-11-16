@@ -63,6 +63,15 @@ android {
         compose = true
         buildConfig = true
     }
+
+    // Keep ALL languages in every install so the in-app language picker works.
+    // Without this, an App Bundle ships only the device's system language and
+    // switching to e.g. Uzbek falls back to English (resources missing on device).
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
 }
 
 dependencies {
