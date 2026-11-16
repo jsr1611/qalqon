@@ -11,6 +11,7 @@ import android.provider.Settings
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.FragmentActivity
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,7 +24,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -94,6 +98,7 @@ class MainActivity : FragmentActivity() {
             MaterialTheme {
                 var unlocked by remember { mutableStateOf(false) }
                 Surface(Modifier.fillMaxSize()) {
+                  Box(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.systemBars)) {
                     if (unlocked) {
                         Dashboard(
                             apps = apps,
@@ -124,6 +129,7 @@ class MainActivity : FragmentActivity() {
                             onUnlock = { unlocked = true }
                         )
                     }
+                  }
                 }
             }
         }
@@ -303,6 +309,7 @@ private fun IconModeChip(label: String, selected: Boolean, onClick: () -> Unit) 
     )
 }
 
+private val BrandBlue = androidx.compose.ui.graphics.Color(0xFF2F6BFF)
 private val GoodColor = androidx.compose.ui.graphics.Color(0xFF1AA06D)
 private val WarnColor = androidx.compose.ui.graphics.Color(0xFFC6761A)
 private val LockedColor = androidx.compose.ui.graphics.Color(0xFFD84A4A)
@@ -364,7 +371,7 @@ private fun Dashboard(
         item {
             Spacer(Modifier.height(14.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("🛡", style = MaterialTheme.typography.headlineSmall)
+                BrandShield(Modifier.size(28.dp))
                 Spacer(Modifier.width(8.dp))
                 Text(stringResource(R.string.app_name),
                     style = MaterialTheme.typography.titleLarge,
@@ -547,32 +554,7 @@ private fun Dashboard(
                     }
                 }
                 Spacer(Modifier.height(8.dp))
-                if (bioAvailable) {
-                    Row(
-                        Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(Modifier.weight(1f)) {
-                            Text(stringResource(R.string.bio_toggle_title))
-                            Text(stringResource(R.string.bio_toggle_sub),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        }
-                        Switch(checked = bioOn, onCheckedChange = onToggleBio)
-                    }
-                }
-                Row(
-                    Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(Modifier.weight(1f)) {
-                        Text(stringResource(R.string.dns_toggle_title))
-                        Text(stringResource(R.string.dns_toggle_sub),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    }
-                    Switch(checked = dnsOn, onCheckedChange = onToggleDns)
-                }
+                // Fingerprint/face is on by default (no toggle); DNS website filter removed.
                 Text(stringResource(R.string.icon_label), Modifier.padding(top = 8.dp))
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     IconModeChip(stringResource(R.string.icon_normal),
@@ -641,6 +623,30 @@ private fun Dashboard(
             }
             Spacer(Modifier.height(24.dp))
         }
+    }
+}
+
+@Composable
+private fun BrandShield(modifier: Modifier) {
+    Canvas(modifier) {
+        val w = size.width; val h = size.height
+        val shield = Path().apply {
+            moveTo(w * 0.5f, 0f)
+            lineTo(w, h * 0.22f)
+            lineTo(w, h * 0.56f)
+            lineTo(w * 0.5f, h)
+            lineTo(0f, h * 0.56f)
+            lineTo(0f, h * 0.22f)
+            close()
+        }
+        drawPath(shield, BrandBlue)
+        val check = Path().apply {
+            moveTo(w * 0.28f, h * 0.50f)
+            lineTo(w * 0.44f, h * 0.66f)
+            lineTo(w * 0.74f, h * 0.36f)
+        }
+        drawPath(check, androidx.compose.ui.graphics.Color.White,
+            style = Stroke(width = w * 0.11f, cap = StrokeCap.Round))
     }
 }
 
