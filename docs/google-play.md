@@ -61,7 +61,7 @@ Open source. Feedback welcome: Telegram @jsr1611
 
 **Category:** Parenting (or Tools)
 **Tags:** parental control, app lock, screen time
-**Contact email:** _(Play requires a public support email — decide which address to use; it is shown on the listing)_
+**Contact email:** `jsr161190@gmail.com`
 **Privacy policy URL:** `https://jsr1611.github.io/qalqon/privacy-policy.html` _(after enabling GitHub Pages — see §5)_
 
 ---
