@@ -51,6 +51,6 @@ object BiometricAuth {
 class BioPrefs(context: Context) {
     private val prefs = context.getSharedPreferences("qalqon_bio", Context.MODE_PRIVATE)
     var enabled: Boolean
-        get() = prefs.getBoolean("bio_enabled", false)
+        get() = prefs.getBoolean("bio_enabled", true)
         set(value) = prefs.edit().putBoolean("bio_enabled", value).apply()
 }
