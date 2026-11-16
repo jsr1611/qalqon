@@ -180,6 +180,9 @@ private fun PinGate(
 ) {
     var pin by remember { mutableStateOf("") }
     var error by remember { mutableStateOf(false) }
+    var recoveryMode by remember { mutableStateOf(false) }
+    var recovery by remember { mutableStateOf("") }
+    var recoveryError by remember { mutableStateOf(false) }
 
     // Offer biometric first when enabled; password stays available as fallback.
     LaunchedEffect(Unit) { if (bioEnabled) onBiometric() }
@@ -191,33 +194,60 @@ private fun PinGate(
     ) {
         Text("🛡 Aqlli Qalqon", style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(16.dp))
-        OutlinedTextField(
-            value = pin,
-            onValueChange = { if (it.length <= 12) { pin = it; error = false } },
-            label = { Text("Parent password") },
-            isError = error,
-            singleLine = true,
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword)
-        )
-        if (error) {
-            Spacer(Modifier.height(4.dp))
-            Text("Incorrect password", color = MaterialTheme.colorScheme.error)
-        }
-        Spacer(Modifier.height(16.dp))
-        Button(onClick = {
-            if (pinStore.verify(pin)) onUnlock() else { error = true; pin = "" }
-        }) { Text("Unlock") }
-        if (bioEnabled) {
-            Spacer(Modifier.height(8.dp))
-            OutlinedButton(onClick = onBiometric) { Text("Use fingerprint / face") }
-        }
-        if (!pinStore.isConfigured) {
-            Spacer(Modifier.height(20.dp))
-            Text(
-                "First time: default password is 1234 — change it after unlocking.",
-                style = MaterialTheme.typography.bodySmall
+
+        if (!recoveryMode) {
+            OutlinedTextField(
+                value = pin,
+                onValueChange = { if (it.length <= 12) { pin = it; error = false } },
+                label = { Text("Parent password") },
+                isError = error,
+                singleLine = true,
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword)
             )
+            if (error) {
+                Spacer(Modifier.height(4.dp))
+                Text("Incorrect password", color = MaterialTheme.colorScheme.error)
+            }
+            Spacer(Modifier.height(16.dp))
+            Button(onClick = {
+                if (pinStore.verify(pin)) onUnlock() else { error = true; pin = "" }
+            }) { Text("Unlock") }
+            if (bioEnabled) {
+                Spacer(Modifier.height(8.dp))
+                OutlinedButton(onClick = onBiometric) { Text("Use fingerprint / face") }
+            }
+            Spacer(Modifier.height(8.dp))
+            TextButton(onClick = { recoveryMode = true }) { Text("Forgot password?") }
+            if (!pinStore.isConfigured) {
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    "First time: default password is 1234 — change it after unlocking.",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        } else {
+            Text("Enter your 10-digit recovery code", style = MaterialTheme.typography.bodyMedium)
+            Spacer(Modifier.height(12.dp))
+            OutlinedTextField(
+                value = recovery,
+                onValueChange = { if (it.length <= 14) { recovery = it; recoveryError = false } },
+                label = { Text("Recovery code") },
+                isError = recoveryError,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword)
+            )
+            if (recoveryError) {
+                Spacer(Modifier.height(4.dp))
+                Text("Incorrect recovery code", color = MaterialTheme.colorScheme.error)
+            }
+            Spacer(Modifier.height(16.dp))
+            Button(onClick = {
+                if (pinStore.verifyRecovery(recovery)) onUnlock()
+                else { recoveryError = true; recovery = "" }
+            }) { Text("Recover") }
+            Spacer(Modifier.height(8.dp))
+            TextButton(onClick = { recoveryMode = false }) { Text("Back to password") }
         }
     }
 }
@@ -328,6 +358,17 @@ private fun Dashboard(
                 }
                 Spacer(Modifier.height(8.dp))
                 ChangePin(pinStore)
+                Spacer(Modifier.height(10.dp))
+                Text(
+                    "🔑 Recovery code: ${pinStore.recoveryCode}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    "Write this down and keep it safe. It's the ONLY way back in if you " +
+                        "forget your password (via \"Forgot password?\" on the unlock screen).",
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
 
             Spacer(Modifier.height(10.dp))
