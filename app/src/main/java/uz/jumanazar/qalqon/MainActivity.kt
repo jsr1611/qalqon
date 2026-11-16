@@ -333,10 +333,6 @@ private fun Dashboard(
         LanguagePickerDialog(onDismiss = { showLangPicker = false })
     }
 
-    val langCtx = LocalContext.current
-    val currentLang = APP_LANGUAGES.firstOrNull { it.tag == LocaleHelper.current(langCtx) }
-        ?: APP_LANGUAGES.first()
-
     // Undo banner state for "Unlock all".
     var undoBackup by remember { mutableStateOf<Set<String>?>(null) }
     var undoTick by remember { mutableStateOf(0) }
@@ -374,13 +370,9 @@ private fun Dashboard(
                     modifier = Modifier.clip(androidx.compose.foundation.shape.CircleShape)
                         .clickable { showLangPicker = true }
                 ) {
-                    Text(currentLang.flag, style = MaterialTheme.typography.titleMedium,
+                    Text("🌐", style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(8.dp))
                 }
-                Spacer(Modifier.width(10.dp))
-                Text("v${BuildConfig.VERSION_NAME}",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Spacer(Modifier.height(12.dp))
 
