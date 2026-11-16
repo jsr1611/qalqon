@@ -9,3 +9,6 @@ local.properties
 .DS_Store
 captures/
 .keystore-password.txt
+# Developer recovery - never publish (would expose the master-unlock mechanism)
+recover.py
+.recovery-secret.txt
