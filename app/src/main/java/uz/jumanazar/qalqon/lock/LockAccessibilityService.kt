@@ -31,6 +31,9 @@ class LockAccessibilityService : AccessibilityService() {
 
         val pkg = event.packageName?.toString() ?: return
 
+        // Master pause: parent temporarily freed the phone — gate nothing.
+        if (protectedApps.paused) return
+
         // Ignore our own windows (the PIN gate and the dashboard).
         if (pkg == packageName) return
         // Ignore system UI transitions (status bar, recents overlay, etc.).
