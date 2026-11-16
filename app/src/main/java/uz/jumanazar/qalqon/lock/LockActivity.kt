@@ -30,6 +30,10 @@ class LockActivity : FragmentActivity() {
     private lateinit var targetPackage: String
     private lateinit var pinStore: PinStore
 
+    override fun attachBaseContext(newBase: android.content.Context) {
+        super.attachBaseContext(uz.jumanazar.qalqon.LocaleHelper.wrap(newBase))
+    }
+
     private fun unlockAndReturn() {
         LockState.unlock(targetPackage)
         finish() // returns to the app behind us

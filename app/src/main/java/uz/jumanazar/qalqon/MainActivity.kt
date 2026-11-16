@@ -12,6 +12,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.FragmentActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,6 +21,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -33,6 +35,17 @@ import uz.jumanazar.qalqon.vpn.DnsFilterVpnService
 import uz.jumanazar.qalqon.vpn.DnsPrefs
 
 data class AppInfo(val label: String, val pkg: String)
+
+/** Languages offered in the in-app picker. Native names are shown as-is (not translated). */
+data class LangOption(val tag: String, val flag: String, val own: String, val english: String)
+
+val APP_LANGUAGES = listOf(
+    LangOption("uz", "🇺🇿", "Özbekça", "Uzbek"),
+    LangOption("en", "🇬🇧", "English", "English"),
+    LangOption("ru", "🇷🇺", "Русский", "Russian"),
+    LangOption("ko", "🇰🇷", "한국어", "Korean"),
+    LangOption("ar", "🇸🇦", "العربية", "Arabic")
+)
 
 class MainActivity : FragmentActivity() {
 
@@ -53,6 +66,10 @@ class MainActivity : FragmentActivity() {
             dnsPrefs.enabled = true
             dnsOn.value = true
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -303,6 +320,11 @@ private fun Dashboard(
     var protectedSet by remember { mutableStateOf(store.all()) }
     var paused by remember { mutableStateOf(store.paused) }
     var settingsExpanded by remember { mutableStateOf(false) }
+    var showLangPicker by remember { mutableStateOf(false) }
+
+    if (showLangPicker) {
+        LanguagePickerDialog(onDismiss = { showLangPicker = false })
+    }
 
     // Undo banner state for "Unlock all".
     var undoBackup by remember { mutableStateOf<Set<String>?>(null) }
@@ -507,6 +529,22 @@ private fun Dashboard(
                     }
                 }
                 Spacer(Modifier.height(8.dp))
+                // Language picker row
+                val langCtx = LocalContext.current
+                val currentLang = APP_LANGUAGES.firstOrNull {
+                    it.tag == LocaleHelper.current(langCtx)
+                } ?: APP_LANGUAGES.first()
+                Row(
+                    Modifier.fillMaxWidth()
+                        .clip(MaterialTheme.shapes.medium)
+                        .clickable { showLangPicker = true }
+                        .padding(vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("🌐  " + stringResource(R.string.language), Modifier.weight(1f))
+                    Text("${currentLang.flag}  ${currentLang.own}  ›",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
                 if (bioAvailable) {
                     Row(
                         Modifier.fillMaxWidth().padding(vertical = 8.dp),
@@ -636,6 +674,49 @@ private fun SetupStep(done: Boolean, label: String, onOpen: (() -> Unit)?) {
             }
         }
     }
+}
+
+@Composable
+private fun LanguagePickerDialog(onDismiss: () -> Unit) {
+    val ctx = LocalContext.current
+    val currentTag = LocaleHelper.current(ctx)
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {},
+        title = { Text("🌐  " + stringResource(R.string.language)) },
+        text = {
+            Column {
+                APP_LANGUAGES.forEach { lang ->
+                    val selected = lang.tag == currentTag
+                    Row(
+                        Modifier.fillMaxWidth()
+                            .clip(MaterialTheme.shapes.medium)
+                            .clickable {
+                                if (lang.tag != currentTag) {
+                                    LocaleHelper.set(ctx, lang.tag)
+                                    (ctx as? android.app.Activity)?.recreate()
+                                }
+                                onDismiss()
+                            }
+                            .padding(vertical = 12.dp, horizontal = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(lang.flag, style = MaterialTheme.typography.headlineSmall)
+                        Spacer(Modifier.width(14.dp))
+                        Column(Modifier.weight(1f)) {
+                            Text(lang.own, style = MaterialTheme.typography.bodyLarge)
+                            Text(lang.english, style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                        if (selected) {
+                            Text("✓", color = MaterialTheme.colorScheme.primary,
+                                style = MaterialTheme.typography.titleMedium)
+                        }
+                    }
+                }
+            }
+        }
+    )
 }
 
 @Composable

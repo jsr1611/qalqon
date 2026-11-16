@@ -71,6 +71,7 @@
     <string name="new_password">كلمة مرور جديدة</string>
     <string name="password_saved">تم حفظ كلمة المرور</string>
     <string name="set">حفظ</string>
+    <string name="language">اللغة</string>
 
     <string name="lock_enter_password">أدخل كلمة المرور</string>
     <string name="password">كلمة المرور</string>

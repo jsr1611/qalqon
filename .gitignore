@@ -12,3 +12,5 @@ captures/
 # Developer recovery - never publish (would expose the master-unlock mechanism)
 recover.py
 .recovery-secret.txt
+
+release_apk/

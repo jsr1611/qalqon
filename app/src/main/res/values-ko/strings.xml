@@ -71,6 +71,7 @@
     <string name="new_password">새 비밀번호</string>
     <string name="password_saved">비밀번호 저장됨</string>
     <string name="set">저장</string>
+    <string name="language">언어</string>
 
     <string name="lock_enter_password">비밀번호 입력</string>
     <string name="password">비밀번호</string>

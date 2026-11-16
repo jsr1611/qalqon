@@ -71,6 +71,7 @@
     <string name="new_password">Новый пароль</string>
     <string name="password_saved">Пароль сохранён</string>
     <string name="set">Сохранить</string>
+    <string name="language">Язык</string>
 
     <string name="lock_enter_password">Введите пароль</string>
     <string name="password">Пароль</string>
