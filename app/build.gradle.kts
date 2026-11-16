@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "uz.jumanazar.qalqon"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "uz.jumanazar.qalqon"
         minSdk = 29
-        targetSdk = 35
+        targetSdk = 36
         // Driven by CI (GitHub run number) so every build bumps; falls back for local builds.
         versionCode = (System.getenv("VERSION_CODE") ?: "1").toInt()
         versionName = System.getenv("VERSION_NAME") ?: "1.0.0"
