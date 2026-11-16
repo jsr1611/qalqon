@@ -326,6 +326,10 @@ private fun Dashboard(
         LanguagePickerDialog(onDismiss = { showLangPicker = false })
     }
 
+    val langCtx = LocalContext.current
+    val currentLang = APP_LANGUAGES.firstOrNull { it.tag == LocaleHelper.current(langCtx) }
+        ?: APP_LANGUAGES.first()
+
     // Undo banner state for "Unlock all".
     var undoBackup by remember { mutableStateOf<Set<String>?>(null) }
     var undoTick by remember { mutableStateOf(0) }
@@ -357,6 +361,18 @@ private fun Dashboard(
                 Text(stringResource(R.string.app_name),
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.weight(1f))
+                Surface(
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    shape = MaterialTheme.shapes.extraLarge,
+                    modifier = Modifier.clip(MaterialTheme.shapes.extraLarge)
+                        .clickable { showLangPicker = true }
+                ) {
+                    Text("🌐  ${currentLang.flag} ${currentLang.own}",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp))
+                }
+                Spacer(Modifier.width(8.dp))
                 Text("v${BuildConfig.VERSION_NAME}",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -529,22 +545,6 @@ private fun Dashboard(
                     }
                 }
                 Spacer(Modifier.height(8.dp))
-                // Language picker row
-                val langCtx = LocalContext.current
-                val currentLang = APP_LANGUAGES.firstOrNull {
-                    it.tag == LocaleHelper.current(langCtx)
-                } ?: APP_LANGUAGES.first()
-                Row(
-                    Modifier.fillMaxWidth()
-                        .clip(MaterialTheme.shapes.medium)
-                        .clickable { showLangPicker = true }
-                        .padding(vertical = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("🌐  " + stringResource(R.string.language), Modifier.weight(1f))
-                    Text("${currentLang.flag}  ${currentLang.own}  ›",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
                 if (bioAvailable) {
                     Row(
                         Modifier.fillMaxWidth().padding(vertical = 8.dp),
