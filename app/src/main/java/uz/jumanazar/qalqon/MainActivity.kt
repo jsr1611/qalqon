@@ -554,7 +554,19 @@ private fun Dashboard(
                     }
                 }
                 Spacer(Modifier.height(8.dp))
-                // Fingerprint/face is on by default (no toggle); DNS website filter removed.
+                // Fingerprint/face is on by default, so no visible toggle here.
+                Row(
+                    Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(Modifier.weight(1f)) {
+                        Text(stringResource(R.string.dns_toggle_title))
+                        Text(stringResource(R.string.dns_toggle_sub),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    Switch(checked = dnsOn, onCheckedChange = onToggleDns)
+                }
                 Text(stringResource(R.string.icon_label), Modifier.padding(top = 8.dp))
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     IconModeChip(stringResource(R.string.icon_normal),
