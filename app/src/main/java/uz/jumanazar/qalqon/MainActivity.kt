@@ -341,6 +341,8 @@ private fun Dashboard(
     var protectedSet by remember { mutableStateOf(store.all()) }
     var paused by remember { mutableStateOf(store.paused) }
     var settingsExpanded by remember { mutableStateOf(false) }
+    var lockedExpanded by remember { mutableStateOf(true) }
+    var openExpanded by remember { mutableStateOf(false) }
     var showLangPicker by remember { mutableStateOf(false) }
 
     if (showLangPicker) {
@@ -497,13 +499,15 @@ private fun Dashboard(
             )
             Spacer(Modifier.height(8.dp))
             if (lockedApps.isNotEmpty()) {
-                Text(stringResource(R.string.locked_group, lockedApps.size),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                GroupHeader(
+                    label = stringResource(R.string.locked_group, lockedApps.size),
+                    expanded = lockedExpanded
+                ) { lockedExpanded = !lockedExpanded }
             }
         }
 
-        items(lockedApps, key = { "L_" + it.pkg }) { app ->
+        items(if (lockedExpanded || query.isNotBlank()) lockedApps else emptyList(),
+            key = { "L_" + it.pkg }) { app ->
             AppRow(app, true) { on ->
                 store.setProtected(app.pkg, on); protectedSet = store.all()
             }
@@ -512,13 +516,15 @@ private fun Dashboard(
         item {
             if (openApps.isNotEmpty()) {
                 Spacer(Modifier.height(8.dp))
-                Text(stringResource(R.string.open_group),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                GroupHeader(
+                    label = stringResource(R.string.open_group) + " (${openApps.size})",
+                    expanded = openExpanded
+                ) { openExpanded = !openExpanded }
             }
         }
 
-        items(openApps, key = { "U_" + it.pkg }) { app ->
+        items(if (openExpanded || query.isNotBlank()) openApps else emptyList(),
+            key = { "U_" + it.pkg }) { app ->
             AppRow(app, false) { on ->
                 store.setProtected(app.pkg, on); protectedSet = store.all()
             }
@@ -743,6 +749,24 @@ private fun LanguagePickerDialog(onDismiss: () -> Unit) {
             }
         }
     )
+}
+
+@Composable
+private fun GroupHeader(label: String, expanded: Boolean, onToggle: () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth()
+            .clip(MaterialTheme.shapes.small)
+            .clickable { onToggle() }
+            .padding(vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(label, Modifier.weight(1f),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(if (expanded) "▲" else "▼",
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
 }
 
 @Composable
