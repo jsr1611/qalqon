@@ -4,6 +4,7 @@ import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.net.VpnService
 import android.os.Bundle
 import android.provider.Settings
@@ -227,7 +228,18 @@ private fun PinGate(
                 )
             }
         } else {
-            Text("Enter your 10-digit recovery code", style = MaterialTheme.typography.bodyMedium)
+            val today = remember {
+                java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US)
+                    .format(java.util.Date())
+            }
+            Text(
+                "Enter your 10-digit recovery code, or ask the developer for a code " +
+                    "using the Device ID below.",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Spacer(Modifier.height(12.dp))
+            Text("Device ID: ${pinStore.deviceId}", style = MaterialTheme.typography.titleMedium)
+            Text("Date: $today", style = MaterialTheme.typography.bodySmall)
             Spacer(Modifier.height(12.dp))
             OutlinedTextField(
                 value = recovery,
@@ -369,6 +381,58 @@ private fun Dashboard(
                         "forget your password (via \"Forgot password?\" on the unlock screen).",
                     style = MaterialTheme.typography.bodySmall
                 )
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    "🆔 Device ID: ${pinStore.deviceId}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    "If you lose the recovery code, the developer can generate a one-time " +
+                        "unlock code from this Device ID on request.",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Spacer(Modifier.height(16.dp))
+                HorizontalDivider()
+                Spacer(Modifier.height(12.dp))
+                Text("ℹ️ About", style = MaterialTheme.typography.titleMedium)
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    "Aqlli Qalqon v${BuildConfig.VERSION_NAME}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    "Developer: Jumanazar Said Ruzim",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    "Feedback & questions welcome — reach out on Telegram:",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                val ctx = LocalContext.current
+                TextButton(
+                    contentPadding = PaddingValues(0.dp),
+                    onClick = {
+                        runCatching {
+                            ctx.startActivity(
+                                Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/jsr1611"))
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            )
+                        }
+                    }
+                ) { Text("@jsr1611") }
+                TextButton(
+                    contentPadding = PaddingValues(0.dp),
+                    onClick = {
+                        runCatching {
+                            ctx.startActivity(
+                                Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/mydailyITblog"))
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            )
+                        }
+                    }
+                ) { Text("Channel: t.me/mydailyITblog") }
             }
 
             Spacer(Modifier.height(10.dp))

@@ -80,6 +80,17 @@ manual dispatch, with an auto-incrementing version (`1.0.<run#>`). To build loca
 
 Package: `uz.jumanazar.qalqon` · minSdk 29 · targetSdk 35 · Kotlin + Jetpack Compose.
 
+## 👤 Developer & feedback
+
+Built by **Jumanazar Said Ruzim** — a parent, for parents.
+
+Feedback, questions and ideas are very welcome:
+
+- Telegram: [@jsr1611](https://t.me/jsr1611)
+- Channel: [t.me/mydailyITblog](https://t.me/mydailyITblog)
+
+If the app helps your family, please ⭐ **star the repo** — it helps others find it.
+
 ## 📄 License
 
 MIT — use it, fork it, improve it. Made for parents, by a parent.
