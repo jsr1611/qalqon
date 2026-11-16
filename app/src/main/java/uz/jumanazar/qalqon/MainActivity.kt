@@ -11,6 +11,7 @@ import android.provider.Settings
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.FragmentActivity
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -22,11 +23,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.drawable.toBitmap
 import uz.jumanazar.qalqon.admin.QalqonAdminReceiver
 import uz.jumanazar.qalqon.lock.LockAccessibilityService
 import uz.jumanazar.qalqon.lock.ProtectedAppsStore
@@ -34,7 +37,11 @@ import uz.jumanazar.qalqon.stealth.AppDisguise
 import uz.jumanazar.qalqon.vpn.DnsFilterVpnService
 import uz.jumanazar.qalqon.vpn.DnsPrefs
 
-data class AppInfo(val label: String, val pkg: String)
+data class AppInfo(
+    val label: String,
+    val pkg: String,
+    val icon: android.graphics.drawable.Drawable? = null
+)
 
 /** Languages offered in the in-app picker. Native names are shown as-is (not translated). */
 data class LangOption(val tag: String, val flag: String, val own: String, val english: String)
@@ -173,7 +180,7 @@ class MainActivity : FragmentActivity() {
             .asSequence()
             .map { it.activityInfo }
             .filter { it.packageName != packageName }
-            .map { AppInfo(it.loadLabel(pm).toString(), it.packageName) }
+            .map { AppInfo(it.loadLabel(pm).toString(), it.packageName, it.loadIcon(pm)) }
             .distinctBy { it.pkg }
             .sortedBy { it.label.lowercase() }
             .toList()
@@ -362,17 +369,15 @@ private fun Dashboard(
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.weight(1f))
                 Surface(
+                    shape = androidx.compose.foundation.shape.CircleShape,
                     color = MaterialTheme.colorScheme.primaryContainer,
-                    shape = MaterialTheme.shapes.extraLarge,
-                    modifier = Modifier.clip(MaterialTheme.shapes.extraLarge)
+                    modifier = Modifier.clip(androidx.compose.foundation.shape.CircleShape)
                         .clickable { showLangPicker = true }
                 ) {
-                    Text("🌐  ${currentLang.flag} ${currentLang.own}",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp))
+                    Text(currentLang.flag, style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(8.dp))
                 }
-                Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(10.dp))
                 Text("v${BuildConfig.VERSION_NAME}",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -725,6 +730,14 @@ private fun AppRow(app: AppInfo, locked: Boolean, onToggle: (Boolean) -> Unit) {
         Modifier.fillMaxWidth().padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        val bmp = remember(app.pkg) { app.icon?.toBitmap(96, 96)?.asImageBitmap() }
+        if (bmp != null) {
+            Image(bmp, contentDescription = null,
+                modifier = Modifier.size(38.dp).clip(MaterialTheme.shapes.small))
+        } else {
+            Box(Modifier.size(38.dp))
+        }
+        Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
             Text(app.label, style = MaterialTheme.typography.bodyLarge)
             Text(
