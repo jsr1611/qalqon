@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -16,6 +17,7 @@ import androidx.fragment.app.FragmentActivity
 import uz.jumanazar.qalqon.BioPrefs
 import uz.jumanazar.qalqon.BiometricAuth
 import uz.jumanazar.qalqon.PinStore
+import uz.jumanazar.qalqon.R
 
 /**
  * Full-screen PIN gate drawn over a protected app.
@@ -105,12 +107,13 @@ private fun LockScreen(
         // which app is doing the blocking.
         Text("🔒", style = MaterialTheme.typography.displayMedium)
         Spacer(Modifier.height(12.dp))
-        Text("Enter password", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(R.string.lock_enter_password),
+            style = MaterialTheme.typography.titleMedium)
         Spacer(Modifier.height(20.dp))
         OutlinedTextField(
             value = pin,
             onValueChange = { if (it.length <= 12) { pin = it; wrong = false } },
-            label = { Text("Password") },
+            label = { Text(stringResource(R.string.password)) },
             isError = wrong,
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
@@ -118,7 +121,7 @@ private fun LockScreen(
         )
         if (wrong) {
             Spacer(Modifier.height(6.dp))
-            Text("Incorrect", color = MaterialTheme.colorScheme.error)
+            Text(stringResource(R.string.incorrect), color = MaterialTheme.colorScheme.error)
         }
         Spacer(Modifier.height(18.dp))
         Button(
@@ -127,16 +130,16 @@ private fun LockScreen(
                 if (!ok) { wrong = true; pin = "" }
             },
             modifier = Modifier.fillMaxWidth()
-        ) { Text("Unlock") }
+        ) { Text(stringResource(R.string.unlock)) }
         if (bioEnabled) {
             Spacer(Modifier.height(10.dp))
             OutlinedButton(onClick = onBiometric, modifier = Modifier.fillMaxWidth()) {
-                Text("Use fingerprint / face")
+                Text(stringResource(R.string.use_biometric))
             }
         }
         Spacer(Modifier.height(10.dp))
         OutlinedButton(onClick = onLeave, modifier = Modifier.fillMaxWidth()) {
-            Text("Cancel")
+            Text(stringResource(R.string.cancel))
         }
     }
 }

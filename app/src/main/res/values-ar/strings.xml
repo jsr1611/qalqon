@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aqlli Qalqon</string>
+    <string name="disguise_name">آلة حاسبة</string>
+    <string name="admin_label">حماية Aqlli Qalqon</string>
+    <string name="admin_description">يمنع إلغاء تثبيت التطبيق دون كلمة مرور الوالد.</string>
+    <string name="accessibility_description">يراقب Aqlli Qalqon أي تطبيق يُفتح ليطلب كلمة مرور الوالد قبل فتح التطبيقات المحمية. لا يقرأ محتوى الشاشة.</string>
+
+    <string name="parent_password">كلمة مرور الوالد</string>
+    <string name="incorrect_password">كلمة المرور غير صحيحة</string>
+    <string name="unlock">فتح</string>
+    <string name="use_biometric">استخدام البصمة / الوجه</string>
+    <string name="forgot_password">هل نسيت كلمة المرور؟</string>
+    <string name="first_time_hint">أول مرة: كلمة المرور الافتراضية 1234 — غيّرها بعد الفتح.</string>
+    <string name="recovery_intro">أدخل رمز الاسترداد المكوّن من 10 أرقام، أو اطلب رمزًا من المطوّر باستخدام معرّف الجهاز أدناه.</string>
+    <string name="device_id_line">معرّف الجهاز: %1$s</string>
+    <string name="date_line">التاريخ: %1$s</string>
+    <string name="recovery_code">رمز الاسترداد</string>
+    <string name="incorrect_recovery">رمز الاسترداد غير صحيح</string>
+    <string name="recover">استرداد</string>
+    <string name="back_to_password">العودة إلى كلمة المرور</string>
+
+    <string name="protection_paused">الحماية متوقفة مؤقتًا</string>
+    <string name="protection_on">الحماية مفعّلة</string>
+    <string name="setup_not_finished">لم يكتمل الإعداد</string>
+    <string name="hero_paused_sub">التطبيقات تُفتح بحرية — فعّل لاستئناف الحماية</string>
+    <string name="hero_locked_sub">%1$d تطبيقات مقفلة · يحمي هذا الهاتف</string>
+    <string name="service_active">الخدمة نشطة</string>
+    <string name="service_off">الخدمة متوقفة</string>
+    <string name="uninstall_blocked">الإلغاء محظور</string>
+    <string name="uninstall_off">الحماية من الإلغاء متوقفة</string>
+
+    <string name="finish_setup">أكمل الإعداد</string>
+    <string name="step_change_password">غيّر كلمة المرور الافتراضية</string>
+    <string name="step_accessibility">فعّل خدمة إمكانية الوصول</string>
+    <string name="step_uninstall">فعّل الحماية من الإلغاء</string>
+    <string name="open_step">فتح ›</string>
+
+    <string name="lock_recommended">✨  قفل التطبيقات الموصى بها</string>
+    <string name="search_apps">البحث عن التطبيقات</string>
+    <string name="locked_group">🔒 مقفلة (%1$d)</string>
+    <string name="opens_with_password">تُفتح بكلمة المرور فقط</string>
+    <string name="opens_freely">تُفتح بحرية</string>
+    <string name="locked_chip">مقفل</string>
+    <string name="open_group">مفتوحة · غير مقفلة</string>
+
+    <string name="settings_show">الإعدادات ▼</string>
+    <string name="settings_hide">إخفاء ▲</string>
+    <string name="unlock_all">🔓  إلغاء قفل كل التطبيقات</string>
+    <string name="unlocked_all">تم إلغاء قفل جميع التطبيقات</string>
+    <string name="undo">تراجع</string>
+    <string name="bio_toggle_title">الفتح بالبصمة / الوجه</string>
+    <string name="bio_toggle_sub">اختياري — كلمة المرور تعمل دائمًا.</string>
+    <string name="dns_toggle_title">حظر YouTube/Roblox في المتصفحات</string>
+    <string name="dns_toggle_sub">فلتر DNS اختياري. يحظرهما لك أيضًا أثناء التفعيل.</string>
+    <string name="icon_label">أيقونة الشاشة الرئيسية</string>
+    <string name="icon_normal">عادي</string>
+    <string name="icon_calculator">آلة حاسبة</string>
+    <string name="icon_hidden">مخفي</string>
+    <string name="icon_hidden_warning">⚠ لا توجد أيقونة. لإعادة الفتح اضغط زر رفع الصوت 5 مرات بسرعة (يجب أن تكون خدمة الحماية مفعّلة). إن لم ينجح، أعد تثبيت التطبيق.</string>
+
+    <string name="recovery_code_label">🔑 رمز الاسترداد: %1$s</string>
+    <string name="recovery_code_note">اكتبه واحتفظ به بأمان. إنه الطريقة الوحيدة للدخول إذا نسيت كلمة المرور (عبر \"هل نسيت كلمة المرور؟\" في شاشة الفتح).</string>
+    <string name="device_id_display">🆔 معرّف الجهاز: %1$s</string>
+    <string name="device_id_note">إذا فقدت رمز الاسترداد، يمكن للمطوّر إنشاء رمز فتح لمرة واحدة من معرّف الجهاز هذا عند الطلب.</string>
+    <string name="about">ℹ️ حول التطبيق</string>
+    <string name="about_version">Aqlli Qalqon v%1$s</string>
+    <string name="about_developer">المطوّر: Jumanazar Said Ruzim — أحد الوالدين، من أجل الوالدين.</string>
+    <string name="telegram_handle">Telegram @jsr1611</string>
+    <string name="telegram_channel">القناة: t.me/mydailyITblog</string>
+    <string name="new_password">كلمة مرور جديدة</string>
+    <string name="password_saved">تم حفظ كلمة المرور</string>
+    <string name="set">حفظ</string>
+
+    <string name="lock_enter_password">أدخل كلمة المرور</string>
+    <string name="password">كلمة المرور</string>
+    <string name="incorrect">غير صحيح</string>
+    <string name="cancel">إلغاء</string>
+
+    <string name="bio_title">فتح</string>
+    <string name="bio_subtitle">تحقّق للمتابعة</string>
+    <string name="bio_negative">استخدام كلمة المرور</string>
+
+    <string name="vpn_channel">حماية Qalqon</string>
+    <string name="vpn_title">Qalqon نشط</string>
+    <string name="vpn_text">تصفية المحتوى مفعّلة.</string>
+</resources>

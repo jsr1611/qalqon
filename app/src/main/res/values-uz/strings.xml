@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aqlli Qalqon</string>
+    <string name="disguise_name">Kalkulyator</string>
+    <string name="admin_label">Aqlli Qalqon himoyasi</string>
+    <string name="admin_description">Ilovani ota-ona parolisiz oʻchirishning oldini oladi.</string>
+    <string name="accessibility_description">Aqlli Qalqon qaysi ilova ochilayotganini kuzatib, himoyalangan ilovalardan oldin ota-ona parolini soʻraydi. Ekran tarkibini oʻqimaydi.</string>
+
+    <string name="parent_password">Ota-ona paroli</string>
+    <string name="incorrect_password">Parol notoʻgʻri</string>
+    <string name="unlock">Ochish</string>
+    <string name="use_biometric">Barmoq izi / yuz bilan</string>
+    <string name="forgot_password">Parolni unutdingizmi?</string>
+    <string name="first_time_hint">Birinchi marta: standart parol 1234 — ochgandan soʻng oʻzgartiring.</string>
+    <string name="recovery_intro">10 xonali tiklash kodini kiriting yoki quyidagi Qurilma IDsi orqali dasturchidan kod soʻrang.</string>
+    <string name="device_id_line">Qurilma IDsi: %1$s</string>
+    <string name="date_line">Sana: %1$s</string>
+    <string name="recovery_code">Tiklash kodi</string>
+    <string name="incorrect_recovery">Tiklash kodi notoʻgʻri</string>
+    <string name="recover">Tiklash</string>
+    <string name="back_to_password">Parolga qaytish</string>
+
+    <string name="protection_paused">HIMOYA TOʻXTATILDI</string>
+    <string name="protection_on">HIMOYA YOQILGAN</string>
+    <string name="setup_not_finished">Sozlash tugamagan</string>
+    <string name="hero_paused_sub">Ilovalar erkin ochiladi — himoyani qayta yoqing</string>
+    <string name="hero_locked_sub">%1$d ta ilova qulflangan · telefon himoyada</string>
+    <string name="service_active">Xizmat faol</string>
+    <string name="service_off">Xizmat OʻCHIQ</string>
+    <string name="uninstall_blocked">Oʻchirish bloklangan</string>
+    <string name="uninstall_off">Oʻchirishdan himoya OʻCHIQ</string>
+
+    <string name="finish_setup">Sozlashni tugating</string>
+    <string name="step_change_password">Standart parolni oʻzgartiring</string>
+    <string name="step_accessibility">Maxsus imkoniyatlar xizmatini yoqing</string>
+    <string name="step_uninstall">Oʻchirishdan himoyani yoqing</string>
+    <string name="open_step">Ochish ›</string>
+
+    <string name="lock_recommended">✨  Tavsiya etilgan ilovalarni qulflash</string>
+    <string name="search_apps">Ilovalarni qidirish</string>
+    <string name="locked_group">🔒 Qulflangan (%1$d)</string>
+    <string name="opens_with_password">Faqat parol bilan ochiladi</string>
+    <string name="opens_freely">Erkin ochiladi</string>
+    <string name="locked_chip">QULFLANGAN</string>
+    <string name="open_group">Ochiq · qulflanmagan</string>
+
+    <string name="settings_show">Sozlamalar ▼</string>
+    <string name="settings_hide">Yopish ▲</string>
+    <string name="unlock_all">🔓  Barcha ilovalarni ochish</string>
+    <string name="unlocked_all">Barcha ilovalar ochildi</string>
+    <string name="undo">BEKOR QILISH</string>
+    <string name="bio_toggle_title">Barmoq izi / yuz bilan ochish</string>
+    <string name="bio_toggle_sub">Ixtiyoriy — parol har doim ishlaydi.</string>
+    <string name="dns_toggle_title">Brauzerda YouTube/Roblox ni bloklash</string>
+    <string name="dns_toggle_sub">Ixtiyoriy DNS filtri. Oʻchirilgunga qadar siz uchun ham bloklaydi.</string>
+    <string name="icon_label">Bosh ekran belgisi</string>
+    <string name="icon_normal">Oddiy</string>
+    <string name="icon_calculator">Kalkulyator</string>
+    <string name="icon_hidden">Yashirin</string>
+    <string name="icon_hidden_warning">⚠ Belgi yoʻq. Qayta ochish uchun Ovoz balandligi + tugmasini 5 marta tez bosing (himoya xizmati yoniq boʻlishi kerak). Agar ishlamasa, ilovani qayta oʻrnating.</string>
+
+    <string name="recovery_code_label">🔑 Tiklash kodi: %1$s</string>
+    <string name="recovery_code_note">Buni yozib, saqlang. Parolni unutsangiz, ichkariga qaytishning YAGONA yoʻli shu (ochish ekranidagi \"Parolni unutdingizmi?\" orqali).</string>
+    <string name="device_id_display">🆔 Qurilma IDsi: %1$s</string>
+    <string name="device_id_note">Tiklash kodini yoʻqotsangiz, dasturchi shu Qurilma IDsi orqali bir martalik kod yaratib bera oladi.</string>
+    <string name="about">ℹ️ Dastur haqida</string>
+    <string name="about_version">Aqlli Qalqon v%1$s</string>
+    <string name="about_developer">Dasturchi: Jumanazar Said Roʻzim — ota-ona, ota-onalar uchun.</string>
+    <string name="telegram_handle">Telegram @jsr1611</string>
+    <string name="telegram_channel">Kanal: t.me/mydailyITblog</string>
+    <string name="new_password">Yangi parol</string>
+    <string name="password_saved">Parol saqlandi</string>
+    <string name="set">Saqlash</string>
+
+    <string name="lock_enter_password">Parolni kiriting</string>
+    <string name="password">Parol</string>
+    <string name="incorrect">Notoʻgʻri</string>
+    <string name="cancel">Bekor qilish</string>
+
+    <string name="bio_title">Ochish</string>
+    <string name="bio_subtitle">Tasdiqlang</string>
+    <string name="bio_negative">Parol bilan</string>
+
+    <string name="vpn_channel">Qalqon himoyasi</string>
+    <string name="vpn_title">Qalqon faol</string>
+    <string name="vpn_text">Kontent filtri yoqilgan.</string>
+</resources>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aqlli Qalqon</string>
+    <string name="disguise_name">Калькулятор</string>
+    <string name="admin_label">Защита Aqlli Qalqon</string>
+    <string name="admin_description">Не позволяет удалить приложение без родительского пароля.</string>
+    <string name="accessibility_description">Aqlli Qalqon отслеживает, какое приложение открывается, чтобы запросить родительский пароль перед открытием защищённых приложений. Содержимое экрана не читается.</string>
+
+    <string name="parent_password">Пароль родителя</string>
+    <string name="incorrect_password">Неверный пароль</string>
+    <string name="unlock">Разблокировать</string>
+    <string name="use_biometric">Отпечаток / лицо</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="first_time_hint">Первый запуск: пароль по умолчанию 1234 — измените после входа.</string>
+    <string name="recovery_intro">Введите 10-значный код восстановления или запросите код у разработчика, указав ID устройства ниже.</string>
+    <string name="device_id_line">ID устройства: %1$s</string>
+    <string name="date_line">Дата: %1$s</string>
+    <string name="recovery_code">Код восстановления</string>
+    <string name="incorrect_recovery">Неверный код восстановления</string>
+    <string name="recover">Восстановить</string>
+    <string name="back_to_password">Назад к паролю</string>
+
+    <string name="protection_paused">ЗАЩИТА НА ПАУЗЕ</string>
+    <string name="protection_on">ЗАЩИТА ВКЛЮЧЕНА</string>
+    <string name="setup_not_finished">Настройка не завершена</string>
+    <string name="hero_paused_sub">Приложения открываются свободно — включите, чтобы возобновить защиту</string>
+    <string name="hero_locked_sub">Заблокировано приложений: %1$d · телефон под защитой</string>
+    <string name="service_active">Служба активна</string>
+    <string name="service_off">Служба ВЫКЛ</string>
+    <string name="uninstall_blocked">Удаление заблокировано</string>
+    <string name="uninstall_off">Защита от удаления ВЫКЛ</string>
+
+    <string name="finish_setup">Завершите настройку</string>
+    <string name="step_change_password">Измените пароль по умолчанию</string>
+    <string name="step_accessibility">Включите службу специальных возможностей</string>
+    <string name="step_uninstall">Включите защиту от удаления</string>
+    <string name="open_step">Открыть ›</string>
+
+    <string name="lock_recommended">✨  Заблокировать рекомендуемые</string>
+    <string name="search_apps">Поиск приложений</string>
+    <string name="locked_group">🔒 Заблокировано (%1$d)</string>
+    <string name="opens_with_password">Открывается только с паролем</string>
+    <string name="opens_freely">Открывается свободно</string>
+    <string name="locked_chip">ЗАБЛОК.</string>
+    <string name="open_group">Открыто · не заблокировано</string>
+
+    <string name="settings_show">Настройки ▼</string>
+    <string name="settings_hide">Скрыть ▲</string>
+    <string name="unlock_all">🔓  Разблокировать все</string>
+    <string name="unlocked_all">Все приложения разблокированы</string>
+    <string name="undo">ОТМЕНА</string>
+    <string name="bio_toggle_title">Разблокировка отпечатком / лицом</string>
+    <string name="bio_toggle_sub">Необязательно — пароль всегда работает.</string>
+    <string name="dns_toggle_title">Блокировать YouTube/Roblox в браузерах</string>
+    <string name="dns_toggle_sub">Необязательный DNS-фильтр. Блокирует их и для вас, пока включён.</string>
+    <string name="icon_label">Значок на экране</string>
+    <string name="icon_normal">Обычный</string>
+    <string name="icon_calculator">Калькулятор</string>
+    <string name="icon_hidden">Скрытый</string>
+    <string name="icon_hidden_warning">⚠ Без значка. Чтобы открыть, быстро нажмите Громкость + 5 раз (служба защиты должна быть включена). Если не работает — переустановите приложение.</string>
+
+    <string name="recovery_code_label">🔑 Код восстановления: %1$s</string>
+    <string name="recovery_code_note">Запишите и храните в надёжном месте. Это ЕДИНСТВЕННЫЙ способ войти, если забудете пароль (через «Забыли пароль?» на экране разблокировки).</string>
+    <string name="device_id_display">🆔 ID устройства: %1$s</string>
+    <string name="device_id_note">Если потеряете код восстановления, разработчик может создать одноразовый код по этому ID устройства.</string>
+    <string name="about">ℹ️ О приложении</string>
+    <string name="about_version">Aqlli Qalqon v%1$s</string>
+    <string name="about_developer">Разработчик: Jumanazar Said Ruzim — родитель, для родителей.</string>
+    <string name="telegram_handle">Telegram @jsr1611</string>
+    <string name="telegram_channel">Канал: t.me/mydailyITblog</string>
+    <string name="new_password">Новый пароль</string>
+    <string name="password_saved">Пароль сохранён</string>
+    <string name="set">Сохранить</string>
+
+    <string name="lock_enter_password">Введите пароль</string>
+    <string name="password">Пароль</string>
+    <string name="incorrect">Неверно</string>
+    <string name="cancel">Отмена</string>
+
+    <string name="bio_title">Разблокировать</string>
+    <string name="bio_subtitle">Подтвердите личность</string>
+    <string name="bio_negative">Ввести пароль</string>
+
+    <string name="vpn_channel">Защита Qalqon</string>
+    <string name="vpn_title">Qalqon активен</string>
+    <string name="vpn_text">Фильтрация контента включена.</string>
+</resources>

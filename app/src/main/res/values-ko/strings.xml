@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aqlli Qalqon</string>
+    <string name="disguise_name">계산기</string>
+    <string name="admin_label">Aqlli Qalqon 보호</string>
+    <string name="admin_description">부모 비밀번호 없이 앱을 삭제할 수 없도록 합니다.</string>
+    <string name="accessibility_description">Aqlli Qalqon은 어떤 앱이 열리는지 감시하여 보호된 앱을 열기 전에 부모 비밀번호를 요청합니다. 화면 내용은 읽지 않습니다.</string>
+
+    <string name="parent_password">부모 비밀번호</string>
+    <string name="incorrect_password">비밀번호가 틀렸습니다</string>
+    <string name="unlock">잠금 해제</string>
+    <string name="use_biometric">지문 / 얼굴 사용</string>
+    <string name="forgot_password">비밀번호를 잊으셨나요?</string>
+    <string name="first_time_hint">첫 실행: 기본 비밀번호는 1234입니다 — 잠금 해제 후 변경하세요.</string>
+    <string name="recovery_intro">10자리 복구 코드를 입력하거나 아래 기기 ID로 개발자에게 코드를 요청하세요.</string>
+    <string name="device_id_line">기기 ID: %1$s</string>
+    <string name="date_line">날짜: %1$s</string>
+    <string name="recovery_code">복구 코드</string>
+    <string name="incorrect_recovery">복구 코드가 틀렸습니다</string>
+    <string name="recover">복구</string>
+    <string name="back_to_password">비밀번호로 돌아가기</string>
+
+    <string name="protection_paused">보호 일시정지됨</string>
+    <string name="protection_on">보호 켜짐</string>
+    <string name="setup_not_finished">설정 미완료</string>
+    <string name="hero_paused_sub">앱이 자유롭게 열립니다 — 보호를 재개하려면 켜세요</string>
+    <string name="hero_locked_sub">%1$d개 앱 잠김 · 이 기기 보호 중</string>
+    <string name="service_active">서비스 활성</string>
+    <string name="service_off">서비스 꺼짐</string>
+    <string name="uninstall_blocked">삭제 차단됨</string>
+    <string name="uninstall_off">삭제 방지 꺼짐</string>
+
+    <string name="finish_setup">설정 완료하기</string>
+    <string name="step_change_password">기본 비밀번호 변경</string>
+    <string name="step_accessibility">접근성 서비스 켜기</string>
+    <string name="step_uninstall">삭제 방지 켜기</string>
+    <string name="open_step">열기 ›</string>
+
+    <string name="lock_recommended">✨  추천 앱 잠그기</string>
+    <string name="search_apps">앱 검색</string>
+    <string name="locked_group">🔒 잠김 (%1$d)</string>
+    <string name="opens_with_password">비밀번호로만 열림</string>
+    <string name="opens_freely">자유롭게 열림</string>
+    <string name="locked_chip">잠김</string>
+    <string name="open_group">열림 · 잠기지 않음</string>
+
+    <string name="settings_show">설정 ▼</string>
+    <string name="settings_hide">숨기기 ▲</string>
+    <string name="unlock_all">🔓  모든 앱 잠금 해제</string>
+    <string name="unlocked_all">모든 앱 잠금 해제됨</string>
+    <string name="undo">실행 취소</string>
+    <string name="bio_toggle_title">지문 / 얼굴로 잠금 해제</string>
+    <string name="bio_toggle_sub">선택 사항 — 비밀번호는 항상 사용할 수 있습니다.</string>
+    <string name="dns_toggle_title">브라우저에서 YouTube/Roblox 차단</string>
+    <string name="dns_toggle_sub">선택적 DNS 필터. 켜져 있는 동안 본인에게도 차단됩니다.</string>
+    <string name="icon_label">홈 화면 아이콘</string>
+    <string name="icon_normal">기본</string>
+    <string name="icon_calculator">계산기</string>
+    <string name="icon_hidden">숨김</string>
+    <string name="icon_hidden_warning">⚠ 아이콘 없음. 다시 열려면 볼륨 올리기 버튼을 빠르게 5번 누르세요 (보호 서비스가 켜져 있어야 함). 안 되면 앱을 재설치하세요.</string>
+
+    <string name="recovery_code_label">🔑 복구 코드: %1$s</string>
+    <string name="recovery_code_note">적어서 안전하게 보관하세요. 비밀번호를 잊었을 때 다시 들어올 수 있는 유일한 방법입니다 (잠금 해제 화면의 \"비밀번호를 잊으셨나요?\").</string>
+    <string name="device_id_display">🆔 기기 ID: %1$s</string>
+    <string name="device_id_note">복구 코드를 잃어버리면 개발자가 이 기기 ID로 일회용 잠금 해제 코드를 생성할 수 있습니다.</string>
+    <string name="about">ℹ️ 정보</string>
+    <string name="about_version">Aqlli Qalqon v%1$s</string>
+    <string name="about_developer">개발자: Jumanazar Said Ruzim — 부모가 부모를 위해 만들었습니다.</string>
+    <string name="telegram_handle">Telegram @jsr1611</string>
+    <string name="telegram_channel">채널: t.me/mydailyITblog</string>
+    <string name="new_password">새 비밀번호</string>
+    <string name="password_saved">비밀번호 저장됨</string>
+    <string name="set">저장</string>
+
+    <string name="lock_enter_password">비밀번호 입력</string>
+    <string name="password">비밀번호</string>
+    <string name="incorrect">틀림</string>
+    <string name="cancel">취소</string>
+
+    <string name="bio_title">잠금 해제</string>
+    <string name="bio_subtitle">본인 확인</string>
+    <string name="bio_negative">비밀번호 사용</string>
+
+    <string name="vpn_channel">Qalqon 보호</string>
+    <string name="vpn_title">Qalqon 활성</string>
+    <string name="vpn_text">콘텐츠 필터링이 켜져 있습니다.</string>
+</resources>

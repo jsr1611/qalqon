@@ -128,13 +128,13 @@ class DnsFilterVpnService : VpnService() {
     private fun buildNotification(): Notification {
         val mgr = getSystemService(NotificationManager::class.java)
         val channel = NotificationChannel(
-            CHANNEL_ID, "Qalqon protection",
+            CHANNEL_ID, getString(uz.jumanazar.qalqon.R.string.vpn_channel),
             NotificationManager.IMPORTANCE_LOW
         )
         mgr.createNotificationChannel(channel)
         return Notification.Builder(this, CHANNEL_ID)
-            .setContentTitle("Qalqon is active")
-            .setContentText("Content filtering is on.")
+            .setContentTitle(getString(uz.jumanazar.qalqon.R.string.vpn_title))
+            .setContentText(getString(uz.jumanazar.qalqon.R.string.vpn_text))
             .setSmallIcon(android.R.drawable.ic_lock_lock)
             .setOngoing(true)
             .build()

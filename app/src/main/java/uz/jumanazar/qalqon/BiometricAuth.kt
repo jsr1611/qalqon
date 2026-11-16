@@ -37,9 +37,9 @@ object BiometricAuth {
             }
         )
         val info = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Unlock")
-            .setSubtitle("Verify to continue")
-            .setNegativeButtonText("Use password")
+            .setTitle(activity.getString(R.string.bio_title))
+            .setSubtitle(activity.getString(R.string.bio_subtitle))
+            .setNegativeButtonText(activity.getString(R.string.bio_negative))
             .setAllowedAuthenticators(AUTHENTICATORS)
             .setConfirmationRequired(true) // face must be confirmed, not a passive glance
             .build()

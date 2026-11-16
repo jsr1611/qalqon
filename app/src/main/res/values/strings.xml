@@ -5,4 +5,92 @@
     <string name="admin_label">Aqlli Qalqon protection</string>
     <string name="admin_description">Prevents the app from being uninstalled without the parent password.</string>
     <string name="accessibility_description">Aqlli Qalqon watches which app opens so it can ask for the parent password before opening protected apps. It does not read screen content.</string>
+
+    <!-- Unlock gate -->
+    <string name="parent_password">Parent password</string>
+    <string name="incorrect_password">Incorrect password</string>
+    <string name="unlock">Unlock</string>
+    <string name="use_biometric">Use fingerprint / face</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="first_time_hint">First time: default password is 1234 — change it after unlocking.</string>
+    <string name="recovery_intro">Enter your 10-digit recovery code, or ask the developer for a code using the Device ID below.</string>
+    <string name="device_id_line">Device ID: %1$s</string>
+    <string name="date_line">Date: %1$s</string>
+    <string name="recovery_code">Recovery code</string>
+    <string name="incorrect_recovery">Incorrect recovery code</string>
+    <string name="recover">Recover</string>
+    <string name="back_to_password">Back to password</string>
+
+    <!-- Dashboard status -->
+    <string name="protection_paused">Protection PAUSED</string>
+    <string name="protection_on">Protection is ON</string>
+    <string name="setup_not_finished">Setup not finished</string>
+    <string name="hero_paused_sub">Apps open freely — switch on to resume guarding</string>
+    <string name="hero_locked_sub">%1$d apps locked · guarding this phone</string>
+    <string name="service_active">Service active</string>
+    <string name="service_off">Service OFF</string>
+    <string name="uninstall_blocked">Uninstall blocked</string>
+    <string name="uninstall_off">Uninstall OFF</string>
+
+    <!-- Setup checklist -->
+    <string name="finish_setup">Finish setup</string>
+    <string name="step_change_password">Change the default password</string>
+    <string name="step_accessibility">Turn on Accessibility service</string>
+    <string name="step_uninstall">Turn on uninstall protection</string>
+    <string name="open_step">Open ›</string>
+
+    <!-- Quick actions &amp; app list -->
+    <string name="lock_recommended">✨  Lock recommended apps</string>
+    <string name="search_apps">Search apps</string>
+    <string name="locked_group">🔒 Locked (%1$d)</string>
+    <string name="opens_with_password">Opens only with password</string>
+    <string name="opens_freely">Opens freely</string>
+    <string name="locked_chip">LOCKED</string>
+    <string name="open_group">Open · not locked</string>
+
+    <!-- Settings -->
+    <string name="settings_show">Settings ▼</string>
+    <string name="settings_hide">Hide settings ▲</string>
+    <string name="unlock_all">🔓  Unlock all apps</string>
+    <string name="unlocked_all">Unlocked all apps</string>
+    <string name="undo">UNDO</string>
+    <string name="bio_toggle_title">Unlock with fingerprint / face</string>
+    <string name="bio_toggle_sub">Optional — password always works too.</string>
+    <string name="dns_toggle_title">Block YouTube/Roblox in browsers</string>
+    <string name="dns_toggle_sub">Optional DNS filter. Also blocks them for you until turned off.</string>
+    <string name="icon_label">Home-screen icon</string>
+    <string name="icon_normal">Normal</string>
+    <string name="icon_calculator">Calculator</string>
+    <string name="icon_hidden">Hidden</string>
+    <string name="icon_hidden_warning">⚠ No icon. Reopen by pressing Volume Up 5× quickly (needs the protection service on). If that fails, reinstall the app.</string>
+
+    <!-- Recovery &amp; About -->
+    <string name="recovery_code_label">🔑 Recovery code: %1$s</string>
+    <string name="recovery_code_note">Write this down and keep it safe. It\'s the ONLY way back in if you forget your password (via \"Forgot password?\" on the unlock screen).</string>
+    <string name="device_id_display">🆔 Device ID: %1$s</string>
+    <string name="device_id_note">If you lose the recovery code, the developer can generate a one-time unlock code from this Device ID on request.</string>
+    <string name="about">ℹ️ About</string>
+    <string name="about_version">Aqlli Qalqon v%1$s</string>
+    <string name="about_developer">Developer: Jumanazar Said Ruzim — a parent, for parents.</string>
+    <string name="telegram_handle">Telegram @jsr1611</string>
+    <string name="telegram_channel">Channel: t.me/mydailyITblog</string>
+    <string name="new_password">New password</string>
+    <string name="password_saved">Password saved</string>
+    <string name="set">Set</string>
+
+    <!-- Lock screen (over protected apps) -->
+    <string name="lock_enter_password">Enter password</string>
+    <string name="password">Password</string>
+    <string name="incorrect">Incorrect</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Biometric prompt -->
+    <string name="bio_title">Unlock</string>
+    <string name="bio_subtitle">Verify to continue</string>
+    <string name="bio_negative">Use password</string>
+
+    <!-- DNS filter notification -->
+    <string name="vpn_channel">Qalqon protection</string>
+    <string name="vpn_title">Qalqon is active</string>
+    <string name="vpn_text">Content filtering is on.</string>
 </resources>
