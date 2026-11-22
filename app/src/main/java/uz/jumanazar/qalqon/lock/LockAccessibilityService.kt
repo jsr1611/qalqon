@@ -2,8 +2,10 @@ package uz.jumanazar.qalqon.lock
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
+import android.view.inputmethod.InputMethodManager
 import uz.jumanazar.qalqon.MainActivity
 import uz.jumanazar.qalqon.PinStore
 
@@ -36,23 +38,47 @@ class LockAccessibilityService : AccessibilityService() {
 
         // Ignore our own windows (the PIN gate and the dashboard).
         if (pkg == packageName) return
-        // Ignore system UI transitions (status bar, recents overlay, etc.).
-        if (pkg == "com.android.systemui") return
+        // Ignore overlays that sit on top of the current app without replacing it:
+        // system UI, the keyboard (typing in a browser address bar fires these),
+        // permission dialogs, the share/"open with" chooser.
+        if (isTransientOverlay(pkg)) return
 
-        // Left a protected app -> re-lock it so re-entry needs the PIN again.
         val previous = lastForeground
         if (previous != null && previous != pkg && protectedApps.isProtected(previous)) {
-            LockState.relock(previous)
+            if (isHomeLauncher(pkg)) {
+                // Went back to the home screen -> lock right away.
+                LockState.relock(previous)
+            } else {
+                // Short detour (camera, gallery, link to another app...) -> grace period.
+                LockState.markLeft(previous)
+            }
         }
         lastForeground = pkg
 
-        if (protectedApps.isProtected(pkg) && !LockState.isUnlocked(pkg)) {
-            if (!pinStore.isConfigured) {
-                // No PIN set yet -> default PIN path still gates via LockActivity.
+        if (protectedApps.isProtected(pkg)) {
+            if (LockState.isUnlocked(pkg)) {
+                LockState.markReturned(pkg)
+            } else {
+                showLock(pkg)
             }
-            showLock(pkg)
         }
     }
+
+    private fun isTransientOverlay(pkg: String): Boolean {
+        if (pkg in TRANSIENT_PACKAGES) return true
+        return pkg in inputMethodPackages()
+    }
+
+    private fun inputMethodPackages(): Set<String> = runCatching {
+        val imm = getSystemService(InputMethodManager::class.java)
+        imm.enabledInputMethodList.map { it.packageName }.toSet()
+    }.getOrDefault(emptySet())
+
+    private fun isHomeLauncher(pkg: String): Boolean = runCatching {
+        val home = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+        packageManager.queryIntentActivities(home, PackageManager.MATCH_DEFAULT_ONLY)
+            .any { it.activityInfo.packageName == pkg }
+    }.getOrDefault(false)
 
     private fun showLock(pkg: String) {
         val intent = Intent(this, LockActivity::class.java).apply {
@@ -98,5 +124,13 @@ class LockAccessibilityService : AccessibilityService() {
     private companion object {
         const val REQUIRED_PRESSES = 5
         const val WINDOW_MS = 3000L
+
+        val TRANSIENT_PACKAGES = setOf(
+            "com.android.systemui",
+            "android", // system chooser / dialogs
+            "com.android.intentresolver",
+            "com.android.permissioncontroller",
+            "com.google.android.permissioncontroller",
+        )
     }
 }
