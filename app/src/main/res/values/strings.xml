@@ -94,4 +94,6 @@
     <string name="vpn_channel">Qalqon protection</string>
     <string name="vpn_title">Qalqon is active</string>
     <string name="vpn_text">Content filtering is on.</string>
+    <string name="block_uninstalls_title">Block uninstalling apps</string>
+    <string name="block_uninstalls_sub">Asks for the password before any app can be uninstalled — even apps that aren\'t locked.</string>
 </resources>

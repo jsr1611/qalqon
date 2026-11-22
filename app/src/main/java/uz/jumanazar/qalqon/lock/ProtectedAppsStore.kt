@@ -20,6 +20,19 @@ class ProtectedAppsStore(context: Context) {
         get() = prefs.getBoolean(KEY_PAUSED, false)
         set(value) { prefs.edit().putBoolean(KEY_PAUSED, value).apply() }
 
+    /**
+     * Ask for the PIN before Android's uninstall confirmation, for every app —
+     * locked or not — so kids can't delete games/apps by long-pressing them.
+     * On by default.
+     */
+    var blockUninstalls: Boolean
+        get() = prefs.getBoolean(KEY_BLOCK_UNINSTALLS, true)
+        set(value) { prefs.edit().putBoolean(KEY_BLOCK_UNINSTALLS, value).apply() }
+
+    /** True if opening [pkg] needs the PIN: a locked app, or the uninstall dialog. */
+    fun requiresPin(pkg: String): Boolean =
+        isProtected(pkg) || (blockUninstalls && pkg in INSTALLER_PACKAGES)
+
     /** The recommended starter set — one-tap "Lock recommended apps". */
     fun recommended(): Set<String> = defaults()
 
@@ -50,5 +63,13 @@ class ProtectedAppsStore(context: Context) {
     companion object {
         private const val KEY = "protected_packages"
         private const val KEY_PAUSED = "master_paused"
+        private const val KEY_BLOCK_UNINSTALLS = "block_uninstalls"
+
+        /** System apps that show the "Uninstall this app?" confirmation. */
+        val INSTALLER_PACKAGES = setOf(
+            "com.google.android.packageinstaller", // Pixel / most Google-certified phones
+            "com.android.packageinstaller",        // AOSP, Samsung, others
+            "com.samsung.android.packageinstaller",
+        )
     }
 }

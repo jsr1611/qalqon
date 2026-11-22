@@ -1,1 +1,1 @@
-Locked apps can no longer be used through split screen or pop-up view: the lock screen closes the split and the app stays locked.
+New: block uninstalling apps. The password is now required before any app can be uninstalled, even apps that aren't locked. Turn it off in Settings → Block uninstalling apps.

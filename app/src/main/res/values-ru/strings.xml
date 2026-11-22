@@ -85,4 +85,6 @@
     <string name="vpn_channel">Защита Qalqon</string>
     <string name="vpn_title">Qalqon активен</string>
     <string name="vpn_text">Фильтрация контента включена.</string>
+    <string name="block_uninstalls_title">Запретить удаление приложений</string>
+    <string name="block_uninstalls_sub">Перед удалением любого приложения нужен пароль — даже если приложение не заблокировано.</string>
 </resources>

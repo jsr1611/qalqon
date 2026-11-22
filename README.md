@@ -62,6 +62,13 @@ only standard Android APIs — no root, no device-owner — so it's a good fit f
 - **Split screen / pop-up view** can't be used to get around the lock: the PIN screen
   closes the split and the app stays locked.
 
+**Uninstall blocking** (Settings → *Block uninstalling apps*, on by default): the PIN is
+asked before Android's "Uninstall this app?" confirmation for **every** app, locked
+or not, so kids can't delete games or apps by long-pressing them. Every uninstall asks
+again (no grace period). Installing an APK file by hand also asks for the PIN, because
+Android uses the same system screen. Settings and the Play Store, the other places to
+uninstall from, are locked by default.
+
 **Honest limits:** a determined, tech-savvy teen could use Safe Mode or a factory
 reset (only true device-owner mode can stop those). For younger kids grabbing a
 phone, the combo of locked apps + locked Settings + uninstall protection is very hard

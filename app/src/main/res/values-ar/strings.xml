@@ -85,4 +85,6 @@
     <string name="vpn_channel">حماية Qalqon</string>
     <string name="vpn_title">Qalqon نشط</string>
     <string name="vpn_text">تصفية المحتوى مفعّلة.</string>
+    <string name="block_uninstalls_title">منع حذف التطبيقات</string>
+    <string name="block_uninstalls_sub">يطلب كلمة المرور قبل حذف أي تطبيق، حتى التطبيقات غير المقفلة.</string>
 </resources>

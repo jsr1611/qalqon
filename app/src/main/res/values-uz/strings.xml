@@ -85,4 +85,6 @@
     <string name="vpn_channel">Qalqon himoyasi</string>
     <string name="vpn_title">Qalqon faol</string>
     <string name="vpn_text">Kontent filtri yoqilgan.</string>
+    <string name="block_uninstalls_title">Ilovalarni öçirişni bloklaş</string>
+    <string name="block_uninstalls_sub">Har qanday ilovani öçirişdan oldin parol söraladi — qulflanmagan ilovalar uçun ham.</string>
 </resources>

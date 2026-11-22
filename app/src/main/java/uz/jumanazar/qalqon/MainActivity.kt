@@ -567,6 +567,21 @@ private fun Dashboard(
                 }
                 Spacer(Modifier.height(8.dp))
                 // Fingerprint/face is on by default, so no visible toggle here.
+                var blockUninstalls by remember { mutableStateOf(store.blockUninstalls) }
+                Row(
+                    Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(Modifier.weight(1f)) {
+                        Text(stringResource(R.string.block_uninstalls_title))
+                        Text(stringResource(R.string.block_uninstalls_sub),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    Switch(checked = blockUninstalls, onCheckedChange = { on ->
+                        store.blockUninstalls = on; blockUninstalls = on
+                    })
+                }
                 Row(
                     Modifier.fillMaxWidth().padding(vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically

@@ -52,9 +52,9 @@ class LockAccessibilityService : AccessibilityService() {
         if (isTransientOverlay(pkg)) return
 
         val previous = lastForeground
-        if (previous != null && previous != pkg && protectedApps.isProtected(previous)) {
-            if (isHomeLauncher(pkg)) {
-                // Went back to the home screen -> lock right away.
+        if (previous != null && previous != pkg && protectedApps.requiresPin(previous)) {
+            if (isHomeLauncher(pkg) || previous in ProtectedAppsStore.INSTALLER_PACKAGES) {
+                // Went back to the home screen, or finished an uninstall -> lock right away.
                 LockState.relock(previous)
             } else {
                 // Short detour (camera, gallery, link to another app...) -> grace period.
@@ -63,7 +63,7 @@ class LockAccessibilityService : AccessibilityService() {
         }
         lastForeground = pkg
 
-        if (protectedApps.isProtected(pkg)) {
+        if (protectedApps.requiresPin(pkg)) {
             if (LockState.isUnlocked(pkg)) {
                 LockState.markReturned(pkg)
             } else {
