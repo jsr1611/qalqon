@@ -53,6 +53,15 @@ it's protected, a full-screen (anonymous) PIN/biometric gate appears over it. It
 only standard Android APIs — no root, no device-owner — so it's a good fit for a
 *shared* phone the parent keeps using normally.
 
+**When it asks again:**
+- Going to the **home screen** locks the app right away.
+- A **short detour** (camera, gallery, file picker, a link to another app) keeps the
+  app unlocked for **60 seconds**, so you aren't asked for the PIN again mid-task.
+- The **keyboard, system bars, permission dialogs and the share menu** never re-lock
+  the app.
+- **Split screen / pop-up view** can't be used to get around the lock: the PIN screen
+  closes the split and the app stays locked.
+
 **Honest limits:** a determined, tech-savvy teen could use Safe Mode or a factory
 reset (only true device-owner mode can stop those). For younger kids grabbing a
 phone, the combo of locked apps + locked Settings + uninstall protection is very hard
@@ -74,9 +83,22 @@ It's open-source, so you can verify all of this yourself.
 
 ## 🛠 Build
 
-CI (`.github/workflows/build-apk.yml`) builds a **signed** APK on every push and on
-manual dispatch, with an auto-incrementing version (`1.0.<run#>`). To build locally:
-`gradle wrapper` once, then `./gradlew assembleRelease`.
+CI (`.github/workflows/build-apk.yml`) runs **only when started manually**, from
+GitHub → Actions → *Build Signed APK* → **Run workflow**, or locally with
+`gh workflow run build-apk.yml -f track=internal`. Pushes do not build.
+
+Each run builds a **signed** APK and AAB with an auto-incrementing version
+(`1.0.<run#>`), then optionally uploads the AAB to Google Play:
+- **track:** `internal` (default), `alpha` (closed testing), `production`, or `none`
+  (build only).
+- **status:** `completed` (default) rolls out to that track immediately; `draft` only
+  saves it in Play Console.
+- **Release notes** come from `distribution/whatsnew/whatsnew-en-US`. Edit it before a run.
+- Uses the `PLAY_SERVICE_ACCOUNT_JSON` secret (service account with release
+  permissions for this app in Play Console).
+
+To build locally: `gradle wrapper` once, then `./gradlew assembleRelease` (needs
+JDK 17 and the Android SDK).
 
 Package: `uz.jumanazar.qalqon` · minSdk 29 · targetSdk 35 · Kotlin + Jetpack Compose.
 

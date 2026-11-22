@@ -89,7 +89,10 @@ Open source. Feedback welcome: Telegram @jsr1611
 - [ ] Enable **GitHub Pages** (repo Settings → Pages → Branch `main`, folder `/docs`) so the
       privacy policy is live at the URL above. (Or host it on jumanazar.uz.)
 - [ ] Create app in Play Console → **Designed for Families: NO**, target audience **adults/parents**.
-- [ ] Upload the **.aab** from CI to the **Internal testing** track first (fastest, avoids most friction).
+- [x] Upload the **.aab** to the **Internal testing** track. Now automated: GitHub →
+      Actions → *Build Signed APK* → **Run workflow** (track `internal`, status
+      `completed`) builds, uploads and rolls out with release notes from
+      `distribution/whatsnew/`. See README → Build.
 - [ ] Use your existing `qalqon-release.jks` as the **upload key**; let Play App Signing manage the app key.
 - [ ] Fill Data safety (None), content rating questionnaire, privacy policy URL, store listing copy.
 - [ ] Complete the Permissions + Accessibility declarations (§3).
