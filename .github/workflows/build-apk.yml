@@ -11,10 +11,10 @@ on:
         default: internal
         options: [none, internal, alpha, production]
       status:
-        description: 'Release status (use draft while the app is unpublished; roll out in Play Console)'
+        description: 'completed = roll out to testers now (falls back to draft while the app is unpublished)'
         type: choice
-        default: draft
-        options: [draft, completed]
+        default: completed
+        options: [completed, draft]
 
 jobs:
   build:
@@ -107,6 +107,8 @@ jobs:
           name: AqlliQalqon-v${{ env.VERSION_NAME }}-play-aab
 
       - name: Upload to Google Play
+        id: upload
+        continue-on-error: ${{ inputs.status == 'completed' }}
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
@@ -114,3 +116,19 @@ jobs:
           releaseFiles: AqlliQalqon-v${{ env.VERSION_NAME }}.aab
           track: ${{ inputs.track }}
           status: ${{ inputs.status }}
+
+      # Google only accepts draft releases while the app itself is still a
+      # "Draft app" in Play Console. Fall back so the upload is never lost.
+      - name: Upload as draft (app not yet published)
+        if: steps.upload.outcome == 'failure'
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: uz.jumanazar.qalqon
+          releaseFiles: AqlliQalqon-v${{ env.VERSION_NAME }}.aab
+          track: ${{ inputs.track }}
+          status: draft
+
+      - name: Remind to roll out manually
+        if: steps.upload.outcome == 'failure'
+        run: echo "::warning::Saved as DRAFT (Google requires this until the app is published). Roll it out in Play Console > Internal testing."
