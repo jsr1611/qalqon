@@ -11,8 +11,10 @@ import uz.jumanazar.qalqon.PinStore
 
 /**
  * Watches which app comes to the foreground. When a protected app appears and is
- * not currently unlocked, it launches the full-screen PIN gate over it. Leaving a
- * protected app re-locks it, so returning requires the PIN again.
+ * not currently unlocked, it launches the full-screen PIN gate over it. Going to
+ * the home screen re-locks it immediately; a short detour to another app (camera,
+ * gallery, a link) keeps it unlocked for [LockState.GRACE_MS]. Overlays such as
+ * the keyboard, system UI and permission dialogs are ignored entirely.
  */
 class LockAccessibilityService : AccessibilityService() {
 
