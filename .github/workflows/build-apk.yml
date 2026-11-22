@@ -15,10 +15,16 @@ on:
         type: choice
         default: completed
         options: [completed, draft]
+      github_release:
+        description: 'Publish the APK on the GitHub Releases page'
+        type: boolean
+        default: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed to create the GitHub Release
     env:
       # Auto-incrementing version so every build installs over the last.
       VERSION_CODE: ${{ github.run_number }}
@@ -79,6 +85,25 @@ jobs:
           mkdir -p dist
           cp app/build/outputs/apk/release/app-release.apk "dist/AqlliQalqon-v${VERSION_NAME}.apk"
           cp app/build/outputs/bundle/release/app-release.aab "dist/AqlliQalqon-v${VERSION_NAME}.aab"
+
+      - name: Publish GitHub Release
+        if: inputs.github_release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "## What's new"
+            echo
+            sed 's/^/- /' distribution/whatsnew/whatsnew-en-US
+            echo
+            echo "## Install"
+            echo "Download **AqlliQalqon-v${VERSION_NAME}.apk** below, or update from Google Play if you're a tester. On Samsung you may need Auto Blocker off and, for the Accessibility step, \"Allow restricted settings\". If sideloading is blocked, install via \`adb install -r\`."
+          } > release-notes.md
+          gh release create "v${VERSION_NAME}" "dist/AqlliQalqon-v${VERSION_NAME}.apk" \
+            --title "Aqlli Qalqon v${VERSION_NAME}" \
+            --notes-file release-notes.md \
+            --target "${GITHUB_SHA}" \
+            --latest
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
