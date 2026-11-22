@@ -64,6 +64,27 @@ class LockActivity : FragmentActivity() {
         }
 
         if (bioEnabled) promptBiometric()
+        if (isInMultiWindowMode) escapeMultiWindow()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isInMultiWindowMode) escapeMultiWindow()
+    }
+
+    override fun onMultiWindowModeChanged(isInMultiWindowMode: Boolean, newConfig: android.content.res.Configuration) {
+        super.onMultiWindowModeChanged(isInMultiWindowMode, newConfig)
+        if (isInMultiWindowMode) escapeMultiWindow()
+    }
+
+    /**
+     * Split screen / pop-up view: the gate would cover only part of the screen
+     * while the protected app stays usable next to it. Keep the app locked and
+     * press Home, which closes the split.
+     */
+    private fun escapeMultiWindow() {
+        LockState.relock(targetPackage)
+        if (LockAccessibilityService.pressHome()) finish() else goHome()
     }
 
     private fun promptBiometric() {

@@ -65,6 +65,7 @@
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:taskAffinity=".lock"
+            android:resizeableActivity="false"
             android:theme="@android:style/Theme.Material.Light.NoActionBar" />
 
         <!-- Foreground-app watcher -->

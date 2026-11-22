@@ -27,6 +27,12 @@ class LockAccessibilityService : AccessibilityService() {
         protectedApps = ProtectedAppsStore(this)
         pinStore = PinStore(this)
         LockState.clearAll()
+        instance = this
+    }
+
+    override fun onDestroy() {
+        if (instance === this) instance = null
+        super.onDestroy()
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -123,11 +129,17 @@ class LockAccessibilityService : AccessibilityService() {
 
     override fun onInterrupt() { /* no-op */ }
 
-    private companion object {
-        const val REQUIRED_PRESSES = 5
-        const val WINDOW_MS = 3000L
+    companion object {
+        @Volatile private var instance: LockAccessibilityService? = null
 
-        val TRANSIENT_PACKAGES = setOf(
+        /** System Home press (also exits split screen). False if the service isn't running. */
+        fun pressHome(): Boolean =
+            instance?.performGlobalAction(GLOBAL_ACTION_HOME) ?: false
+
+        private const val REQUIRED_PRESSES = 5
+        private const val WINDOW_MS = 3000L
+
+        private val TRANSIENT_PACKAGES = setOf(
             "com.android.systemui",
             "android", // system chooser / dialogs
             "com.android.intentresolver",
