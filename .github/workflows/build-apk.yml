@@ -4,6 +4,17 @@ on:
   # Manual only: run from the GitHub Actions tab ("Run workflow")
   # or locally with: gh workflow run build-apk.yml
   workflow_dispatch:
+    inputs:
+      track:
+        description: 'Upload AAB to Google Play track (none = build only)'
+        type: choice
+        default: internal
+        options: [none, internal, alpha, production]
+      status:
+        description: 'Release status (use draft while the app is unpublished; roll out in Play Console)'
+        type: choice
+        default: draft
+        options: [draft, completed]
 
 jobs:
   build:
@@ -82,3 +93,24 @@ jobs:
           name: AqlliQalqon-v${{ env.VERSION_NAME }}-play-aab
           path: dist/AqlliQalqon-v${{ env.VERSION_NAME }}.aab
           if-no-files-found: error
+
+  upload:
+    needs: build
+    if: inputs.track != 'none'
+    runs-on: ubuntu-latest
+    env:
+      VERSION_NAME: 1.0.${{ github.run_number }}
+    steps:
+      - name: Download AAB
+        uses: actions/download-artifact@v4
+        with:
+          name: AqlliQalqon-v${{ env.VERSION_NAME }}-play-aab
+
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: uz.jumanazar.qalqon
+          releaseFiles: AqlliQalqon-v${{ env.VERSION_NAME }}.aab
+          track: ${{ inputs.track }}
+          status: ${{ inputs.status }}

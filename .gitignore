@@ -14,3 +14,6 @@ recover.py
 .recovery-secret.txt
 
 release_apk/
+
+# Google service account keys
+qalqon-ci-*.json
