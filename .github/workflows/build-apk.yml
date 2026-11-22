@@ -1,8 +1,8 @@
 name: Build Signed APK
 
 on:
-  push:
-    branches: [ main ]
+  # Manual only: run from the GitHub Actions tab ("Run workflow")
+  # or locally with: gh workflow run build-apk.yml
   workflow_dispatch:
 
 jobs:
