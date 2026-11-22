@@ -101,6 +101,9 @@ jobs:
     env:
       VERSION_NAME: 1.0.${{ github.run_number }}
     steps:
+      - name: Checkout (for release notes)
+        uses: actions/checkout@v4
+
       - name: Download AAB
         uses: actions/download-artifact@v4
         with:
@@ -114,6 +117,7 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: uz.jumanazar.qalqon
           releaseFiles: AqlliQalqon-v${{ env.VERSION_NAME }}.aab
+          whatsNewDirectory: distribution/whatsnew
           track: ${{ inputs.track }}
           status: ${{ inputs.status }}
 
@@ -126,6 +130,7 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: uz.jumanazar.qalqon
           releaseFiles: AqlliQalqon-v${{ env.VERSION_NAME }}.aab
+          whatsNewDirectory: distribution/whatsnew
           track: ${{ inputs.track }}
           status: draft
 
