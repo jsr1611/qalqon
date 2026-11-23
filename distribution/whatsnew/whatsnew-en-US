@@ -1,1 +1,1 @@
-New: block uninstalling apps. The password is now required before any app can be uninstalled, even apps that aren't locked. Turn it off in Settings → Block uninstalling apps.
+Fixed: the password is no longer asked again and again inside the same app (for example when searching in Play Store or Settings). Popups and the keyboard don't re-lock the app anymore.
