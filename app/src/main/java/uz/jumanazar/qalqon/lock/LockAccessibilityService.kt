@@ -37,9 +37,14 @@ class LockAccessibilityService : AccessibilityService() {
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
-        if (event.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) return
-
         val pkg = event.packageName?.toString() ?: return
+
+        // Taps/typing/scrolling inside an unlocked app = user is still there:
+        // keep it unlocked (stops a stale grace countdown). Never locks by itself.
+        if (event.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            if (LockState.isUnlocked(pkg)) LockState.markReturned(pkg)
+            return
+        }
 
         // Master pause: parent temporarily freed the phone — gate nothing.
         if (protectedApps.paused) return
@@ -50,6 +55,11 @@ class LockAccessibilityService : AccessibilityService() {
         // system UI, the keyboard (typing in a browser address bar fires these),
         // permission dialogs, the share/"open with" chooser.
         if (isTransientOverlay(pkg)) return
+        // Popups/dialogs/overlays from another (unprotected) package are not a real
+        // app switch: don't start the grace countdown for the app underneath.
+        if (pkg != lastForeground && !protectedApps.requiresPin(pkg) &&
+            !isActivity(pkg, event.className?.toString())
+        ) return
 
         val previous = lastForeground
         if (previous != null && previous != pkg && protectedApps.requiresPin(previous)) {
@@ -77,6 +87,17 @@ class LockAccessibilityService : AccessibilityService() {
         return pkg in inputMethodPackages()
     }
 
+    private val activityCache = HashMap<String, Boolean>()
+
+    private fun isActivity(pkg: String, cls: String?): Boolean {
+        if (cls.isNullOrEmpty()) return false
+        return activityCache.getOrPut("$pkg/$cls") {
+            runCatching {
+                packageManager.getActivityInfo(android.content.ComponentName(pkg, cls), 0); true
+            }.getOrDefault(false)
+        }
+    }
+
     private fun inputMethodPackages(): Set<String> = runCatching {
         val imm = getSystemService(InputMethodManager::class.java)
         imm.enabledInputMethodList.map { it.packageName }.toSet()
@@ -85,7 +106,7 @@ class LockAccessibilityService : AccessibilityService() {
     private fun isHomeLauncher(pkg: String): Boolean = runCatching {
         val home = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
         packageManager.queryIntentActivities(home, PackageManager.MATCH_DEFAULT_ONLY)
-            .any { it.activityInfo.packageName == pkg }
+            .any { it.activityInfo.packageName == pkg && pkg != "com.android.settings" } // skip Settings' FallbackHome
     }.getOrDefault(false)
 
     private fun showLock(pkg: String) {
